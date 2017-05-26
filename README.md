@@ -11,3 +11,5 @@ More information in the following article:
 R. Ravanelli,  M. Di Rita, A. Nascetti, V. Belloni, D. Mattei, N. Nisticò, M. Crespi. (2017 - in press),
 A new Digital Image Correlation software for displacements field measurement in structural applications.
 ISPRS - International Archives of the Photogrammetry, Remote Sensing and Spatial Information Sciences
+
+To be presented at: FOSS4G PARIS | MARNE-LA-VALLÉE | JULY 18TH-22ND 2017
