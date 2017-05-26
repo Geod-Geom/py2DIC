@@ -6,10 +6,10 @@ The software is based on the template matching method, a well-known technique fo
 cross-correlation, and returns the displacement and strain field by comparing 
 two or more images of the specimen acquired at different stages of deformation.
 
-More information in the following article:
+More information in the following scintific paper:
 
-R. Ravanelli,  M. Di Rita, A. Nascetti, V. Belloni, D. Mattei, N. Nisticò, M. Crespi. (2017 - in press),
+R. Ravanelli, A. Nascetti, M. Di Rita, V. Belloni, D. Mattei, N. Nisticò, M. Crespi. (2017 - in press),
 A new Digital Image Correlation software for displacements field measurement in structural applications.
-ISPRS - International Archives of the Photogrammetry, Remote Sensing and Spatial Information Sciences
+ISPRS - International Archives of the Photogrammetry, Remote Sensing and Spatial Information Sciences.
 
 To be presented at: FOSS4G PARIS | MARNE-LA-VALLÉE | JULY 18TH-22ND 2017
