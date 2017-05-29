@@ -17,7 +17,7 @@
  The license text is available from
  http://www.gnu.org/licenses/lgpl.html
  
- More information in the following scintific paper:
+ More information in the following scientific paper:
 
  R. Ravanelli, A. Nascetti, M. Di Rita, V. Belloni, D. Mattei, N. Nisticò, M. Crespi. (2017 - in press),
  A new Digital Image Correlation software for displacements field measurement in structural applications.
