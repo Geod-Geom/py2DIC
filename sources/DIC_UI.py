@@ -33,9 +33,24 @@ import DIC_for_GUI as DIC_roby
 from matplotlib import pyplot as plt
 import subprocess
 import prova_mask1 as c
+import pdb
+
 
 path = os.path.dirname(os.path.abspath(__file__))+'/'
-   
+
+# If not already present, create the directory to store the results
+results_directory = 'OutputPlots'
+if not os.path.exists(path+'\\'+results_directory):
+    os.makedirs(path+'\\'+results_directory)
+	
+results_directory = 'GIF'
+if not os.path.exists(path+'\\'+results_directory):
+    os.makedirs(path+'\\'+results_directory)
+	
+results_directory = 'GIFfrec'
+if not os.path.exists(path+'\\'+results_directory):
+    os.makedirs(path+'\\'+results_directory)
+
 class Form(QDialog):
 
         
@@ -62,11 +77,11 @@ class Form(QDialog):
         
         # Setting all the widgets
         label_image = QLabel(self.scrollAreaWidgetContents)
-        pixmap = QPixmap(path+'stemma.jpg')
+        pixmap = QPixmap(path+'..\\logo_sapienza.jpg')
         
         if pixmap.width() == 0:
 			path = path[:-1]+'\\'
-			pixmap = QPixmap(path+'stemma.jpg')
+			pixmap = QPixmap(path+'..\\logo_sapienza.jpg')
         
         pixmap = pixmap.scaled(445, 90)
         label_image.setPixmap(pixmap)
@@ -93,7 +108,7 @@ class Form(QDialog):
         self.l_prova.setText("Test name")
         self.le_prova = QLineEdit(self.scrollAreaWidgetContents)
         self.le_prova.setObjectName("prova")
-        self.le_prova.setText("prova")
+        self.le_prova.setText("ProvaMurQM1")
 
         self.l2 = QLabel(self.scrollAreaWidgetContents)
         self.l2.setText("Imposed deformation velocity [mm/m]")
@@ -111,7 +126,7 @@ class Form(QDialog):
         self.lstopi.setText("Levels")
         self.lestopi = QLineEdit(self.scrollAreaWidgetContents)
         self.lestopi.setObjectName("levels")
-        self.lestopi.setText("11")
+        self.lestopi.setText("3")
         
         self.lsamp = QLabel(self.scrollAreaWidgetContents)
         self.lsamp.setText("Image time sampling")
@@ -232,7 +247,7 @@ class Form(QDialog):
 			log_message = DIC_roby.DIC(prova,img_format, vel, self.dim_pixel, frame_rate, start_index, levels, image_time_sampling, templateWidth, b, d, recty1, recty2, rectx1, rectx2)
 			  
 			if self.rdbUno.isChecked():
-			   DIC_roby.gif("C:\Users\Valeria\Documents\Prove_14_10\GIF\\", "C:\Users\Valeria\Documents\Prove_14_10\GIF\my_gif.GIF")
+			   DIC_roby.gif(path+"GIF\\", "gif.GIF")
 			else:
 			    print 'no gif'
 			    			

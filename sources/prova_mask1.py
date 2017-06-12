@@ -29,7 +29,7 @@ from PyQt4.QtCore import Qt
 from PyQt4.QtGui import QBrush, QHBoxLayout,QFileDialog, QMainWindow, QGraphicsView, QGraphicsScene, QPen, QGraphicsPixmapItem, QWidget, QApplication, QPixmap
 import sys
 import numpy as np
-
+import os
 
 window_width = 900
 window_height = 500
@@ -105,20 +105,20 @@ class MainWindow(QMainWindow):
 
         self.scene = QGraphicsScene()
         self.scene.setSceneRect(0, 0, window_width, window_height)
-
+        #os.chdir(path)
         pixmap=self.openImage()   
         self.imagePanel = ImageDrawPanel(scene = self.scene)
         self.imagePanel.setPixmap(pixmap)
         self.scene.addItem(self.imagePanel)
         
         print pixmap.width(), pixmap.height()
-                
         original_width = pixmap.width()
         original_height= pixmap.height()
         
         self.width_scale_ratio = float(window_width) / original_width
         self.height_scale_ratio= float(window_height) / original_height
-        
+        # issues with jpeg format at least on Windows
+		# solved adding the path to imageformats  app.addLibraryPath('/path/to/plugins/imageformats') 
         print 'Image original width', original_width, '\nwidth ratio',self.width_scale_ratio
         print 'Image original height', original_height,'\nheight ratio',self.height_scale_ratio
         
@@ -139,14 +139,14 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("Image Draw")
      
     def openImage(self):
-        fname = QFileDialog.getOpenFileName(self, "Open image", ".", "Image Files (*.bmp *.jpg *.png *.xpm)")
-        if fname.isEmpty(): 
-            return None
-        return QPixmap(fname)   
+		fname = QFileDialog.getOpenFileName(self, "Open image", ".", "Image Files (*.bmp *.JPG *.png *.xpm)")
+		if fname.isEmpty(): 
+			return None
+		return QPixmap(fname)   
           
 	 
 app = QApplication(sys.argv)
-path = r"C:\Users\Valeria\Documents\Prove_14_10\InputImages\prova2\\"
+path = os.path.dirname(os.path.abspath(__file__))+'/'#
 app.addLibraryPath(path)
 mainWindow = MainWindow()
 mainWindow.resize(window_width,window_height)

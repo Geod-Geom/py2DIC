@@ -476,29 +476,29 @@ def DIC(prova,format, vel, dim_pixel, frame_rate, start_index, levels, image_tim
 	plt.xlabel('y axis on the grid nodes (mm)')
 	plt.savefig("OutputPlots/"+prova+"_sezione_img_" + str(initial_start_index)+"_img_"+str(stop_index)+".png")
 	plt.show()
-        #gif("C:\Users\Valeria\Documents\Prove_Fibre\GIF\\", "C:\Users\Valeria\Documents\Prove_Fibre\GIF\my_gif.GIF")
-        #gif("C:\Users\Valeria\Documents\Prove_Fibre\GIFfrec\\", "C:\Users\Valeria\Documents\Prove_Fibre\GIFfrec\my_gif.GIF")
-	
 	return msg
 
 ########### GIF ###########
 
 def gif(path1,filename):
-    
+    #import imageio as io
     imgs = []
-    for file_name in os.listdir(path1):
-        if os.path.splitext(file_name)[-1] == '.png':
+    #images = []
+    img_names = glob.glob(path1 + "/*.png")
+    img_names.sort()
+    for img_name in img_names:
+        
   
-           img = cv2.imread(os.path.join(path1, file_name))
-          
-           imgs.append(img)
+           img = cv2.imread(img_name) 
+           imgs.append(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
+           #images.append(io.imread(img_name))
 
                 
-    print writeGif.__doc__
-
+    #print writeGif.__doc__
+    #io.mimsave(path1+'surface1.gif', images, duration = 1)
 
     # .png not .jpeg
-    writeGif(filename, imgs, duration=3)
+    writeGif(path1+filename, imgs, duration=1)
 
 ciao =5
 
