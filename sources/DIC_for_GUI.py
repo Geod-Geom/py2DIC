@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
+'''
 
  py2DIC
  2D Digital Image Correlation software
@@ -23,7 +23,7 @@
  A new Digital Image Correlation software for displacements field measurement in structural applications.
  ISPRS - International Archives of the Photogrammetry, Remote Sensing and Spatial Information Sciences.
 
-"""
+'''
 
 import cv2
 import numpy as np
@@ -383,8 +383,8 @@ def DIC(prova,format, vel, dim_pixel, frame_rate, start_index, levels, image_tim
 	                # Same scale on the x and y axes
 	                plt.gca().set_aspect('equal', adjustable='box')
 
-	                plt.ylabel('mm')
-	                plt.xlabel('mm')
+	                plt.ylabel('pixels')
+	                plt.xlabel('pixels')
 	
 	                # Plot quiver
 	                plt.quiver(results2[:,0], results2[:,1], results2[:,2]/results2[:,4], results2[:,3]/results2[:,4],angles='xy', scale=30,color=cm.jet(nz(results2[:,4])))
