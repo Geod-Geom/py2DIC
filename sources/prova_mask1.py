@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
+'''
 
  py2DIC
  2D Digital Image Correlation software
@@ -23,13 +23,14 @@
  A new Digital Image Correlation software for displacements field measurement in structural applications.
  ISPRS - International Archives of the Photogrammetry, Remote Sensing and Spatial Information Sciences.
 
-"""
+'''
 
 from PyQt4.QtCore import Qt
 from PyQt4.QtGui import QBrush, QHBoxLayout,QFileDialog, QMainWindow, QGraphicsView, QGraphicsScene, QPen, QGraphicsPixmapItem, QWidget, QApplication, QPixmap
 import sys
 import numpy as np
 import os
+import pdb
 
 window_width = 900
 window_height = 500
@@ -38,6 +39,7 @@ rectangley1 = None
 rectangley2 = None 
 rectanglex1 = None
 rectanglex2 = None
+absolute_path_of_images = None
 
 class ImageDrawPanel(QGraphicsPixmapItem):
     
@@ -82,9 +84,8 @@ class ImageDrawPanel(QGraphicsPixmapItem):
     
 			rectangley1 = int(self.rect[0, 1]/self.height_scale_ratio)
 			rectangley2 = int(self.rect[1, 1]/self.height_scale_ratio)
-		        rectanglex1 = int(self.rect[0, 0]/ self.width_scale_ratio)
-		        rectanglex2 = int(self.rect[1, 0]/ self.width_scale_ratio)
-		                
+			rectanglex1 = int(self.rect[0, 0]/ self.width_scale_ratio)
+			rectanglex2 = int(self.rect[1, 0]/ self.width_scale_ratio)
           
     def mousePressEvent (self, event):
 
@@ -105,18 +106,18 @@ class MainWindow(QMainWindow):
 
         self.scene = QGraphicsScene()
         self.scene.setSceneRect(0, 0, window_width, window_height)
-        #os.chdir(path)
-        pixmap=self.openImage()   
+        
+        pixmap=self.openImage() 
         self.imagePanel = ImageDrawPanel(scene = self.scene)
         self.imagePanel.setPixmap(pixmap)
         self.scene.addItem(self.imagePanel)
         
-        print pixmap.width(), pixmap.height()
         original_width = pixmap.width()
         original_height= pixmap.height()
         
         self.width_scale_ratio = float(window_width) / original_width
         self.height_scale_ratio= float(window_height) / original_height
+        print '**** py2DIC by Geodesy and Geomatics Division ****'
         # issues with jpeg format at least on Windows
 		# solved adding the path to imageformats  app.addLibraryPath('/path/to/plugins/imageformats') 
         print 'Image original width', original_width, '\nwidth ratio',self.width_scale_ratio
@@ -136,13 +137,16 @@ class MainWindow(QMainWindow):
         self.widget.setLayout(layout)
 
         self.setCentralWidget(self.widget)
-        self.setWindowTitle("Image Draw")
+        self.setWindowTitle("Draw the Area of Interest (AOI)")
      
     def openImage(self):
+		global absolute_path_of_images
 		fname = QFileDialog.getOpenFileName(self, "Open image", ".", "Image Files (*.bmp *.JPG *.png *.xpm)")
+		absolute_path_of_images = str(fname[:-1*len(os.path.basename(str(fname)))])
+		
 		if fname.isEmpty(): 
 			return None
-		return QPixmap(fname)   
+		return QPixmap(fname)
           
 	 
 app = QApplication(sys.argv)
@@ -152,7 +156,7 @@ mainWindow = MainWindow()
 mainWindow.resize(window_width,window_height)
 mainWindow.show()
 app.exec_()
-print 'fine', rectangley1
+#print 'fine', rectangley1, absolute_path_of_images
 
 
 

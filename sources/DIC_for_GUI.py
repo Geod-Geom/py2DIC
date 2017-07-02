@@ -36,6 +36,8 @@ from scipy import signal as sg
 import os
 from images2gif import writeGif
 import prova_mask1 as c
+from PyQt4.QtCore import pyqtRemoveInputHook
+import pdb
 
 def template_match(img_master, img_slave, method = 'cv2.TM_CCOEFF_NORMED', mlx = 1, mly = 1, show=True):    
 
@@ -78,18 +80,21 @@ def template_match(img_master, img_slave, method = 'cv2.TM_CCOEFF_NORMED', mlx =
     return px, py, max_val
 
 
-def DIC(prova,format, vel, dim_pixel, frame_rate, start_index, levels, image_time_sampling , temp_dim, b, d, recty1, recty2, rectx1, rectx2, c =0):
+def DIC(images_absolute_path,format, vel, dim_pixel, frame_rate, start_index, levels, image_time_sampling , temp_dim, b, d, recty1, recty2, rectx1, rectx2, c =0):
 	plt.close("all")
 	plt.switch_backend("Qt4Agg")
-
+	
+	# find the last folder, which we assume being the name of the test
+	test_name = os.path.basename(os.path.normpath(images_absolute_path))
+	
 	initial_start_index = start_index
-	print 'dentro DIC',recty1, recty2, rectx1, rectx2
+	print 'dentro DIC',recty1, recty2, rectx1, rectx2, images_absolute_path
 	
 	print('Backend: {}'.format(plt.get_backend()))
-
+	print 'Test:', test_name
 	plt.rc('text', usetex=True)
 
-	msg = prova + "\n"
+	msg = test_name + "\n"
 	msg = msg + '-----------\n'
 	msg = msg + "Imposed deformation velocity\n"
 	msg = msg + str(vel)+ " mm/min\n"
@@ -98,9 +103,9 @@ def DIC(prova,format, vel, dim_pixel, frame_rate, start_index, levels, image_tim
 	
 	format = '.'+format
 
-	img_names = glob.glob("InputImages/" + prova +"/*"+format)
+	img_names = glob.glob( images_absolute_path +"/*"+format)
 	img_names.sort()
-	
+
 	# Read the first image to obtain information about the camera resolution 
 	img1 = cv2.imread(img_names[0], 0)
 	crop_img1 = img1[recty1:recty2, rectx1:rectx2]
@@ -125,7 +130,7 @@ def DIC(prova,format, vel, dim_pixel, frame_rate, start_index, levels, image_tim
 	
 	# Array where to store the results
 	results = np.zeros(((np.int(Dim_x/(temp_dim+d+c))-1)*(np.int(Dim_y/(temp_dim+b+c))-1),6))
-        results_mm = np.zeros(((np.int(Dim_x/(temp_dim+d+c))-1)*(np.int(Dim_y/(temp_dim+b+c))-1),6))
+	results_mm = np.zeros(((np.int(Dim_x/(temp_dim+d+c))-1)*(np.int(Dim_y/(temp_dim+b+c))-1),6))
 	for l in range(levels):
 		
 			stop_index = start_index + image_time_sampling
@@ -135,8 +140,8 @@ def DIC(prova,format, vel, dim_pixel, frame_rate, start_index, levels, image_tim
 			print "step", l
 			msg = msg + '-----------'
 			msg = msg +  "\nAnalysed images"
-			msg = msg +  "\n1: "+ img_names[start_index][len ("InputImages/" + prova +"/"):] 
-			msg = msg +  "\n2: "+ img_names[stop_index] [len ("InputImages/" + prova +"/"):] 
+			msg = msg +  "\n1: "+ os.path.basename(str(img_names[start_index]))
+			msg = msg +  "\n2: "+ os.path.basename(str(img_names[stop_index]))
 			print msg
 			
 			delta_index = stop_index - start_index
@@ -152,13 +157,13 @@ def DIC(prova,format, vel, dim_pixel, frame_rate, start_index, levels, image_tim
 			msg = msg + "Expected displacement\n"
 			msg = msg + str(spost_atteso_mm) + ' mm '+ str(spost_atteso_pixel)+ ' pixel\n' 
 
-                        img1 = cv2.imread(img_names[start_index], 0)
-                        crop_img1 = img1[recty1:recty2, rectx1:rectx2]
+			img1 = cv2.imread(img_names[start_index], 0)
+			crop_img1 = img1[recty1:recty2, rectx1:rectx2]
 			img2 = cv2.imread(img_names[stop_index], 0)
-                        crop_img2 = img2[recty1:recty2, rectx1:rectx2]
+			crop_img2 = img2[recty1:recty2, rectx1:rectx2]
 
-                        # If statement to define width and height in ubuntu
-                        if windows == True:
+			# If statement to define width and height in ubuntu
+			if windows == True:
 			     img1 = cv2.imread(img_names[start_index], 0)
 			     crop_img1 = img1[recty1:recty2, rectx1:rectx2]
 			     img2 = cv2.imread(img_names[stop_index], 0)
@@ -249,14 +254,13 @@ def DIC(prova,format, vel, dim_pixel, frame_rate, start_index, levels, image_tim
 	                ####  PLOTS
 	                soglia_inf = 0
 	                soglia_sup_mm = 1.26
-                        #soglia_sup_mm = levels*spost_atteso_pixel*dim_pixel*1.1
-                        
-                        soglia_inf_def = -4/100.0
+	                #soglia_sup_mm = levels*spost_atteso_pixel*dim_pixel*1.1
+	                soglia_inf_def = -4/100.0
 	                soglia_sup_def = 4/100.0
 
-                        ########### DISPLACEMENTS PLOT ########### 
+	                ########### DISPLACEMENTS PLOT ########### 
 	                #boh = results_mm[:,4]
-                        #boh.shape = (np.int(Dim_y/(temp_dim+b+c))-1, np.int(Dim_x/(temp_dim+b+c))-1)
+	                #boh.shape = (np.int(Dim_y/(temp_dim+b+c))-1, np.int(Dim_x/(temp_dim+b+c))-1)
 	
 	                indici_inf = np.where(dy < soglia_inf) # Consider only positive dy
 	                ix = indici_inf [1] # x index
@@ -274,11 +278,13 @@ def DIC(prova,format, vel, dim_pixel, frame_rate, start_index, levels, image_tim
 	                plt.title("$Horizontal\;displacements: u$")
 	                plt.gca().set_aspect('equal', adjustable='box')
 	                plt.imshow(dx, cmap=cm.jet )
-
+	                #pyqtRemoveInputHook()
+	                #pdb.set_trace()
+					
 	                cb=plt.colorbar() 
 	                cb.set_label('$mm$')
 	                
-                        plt.savefig("OutputPlots/"+prova+"displacementsdx_img_" + str(initial_start_index)+"_img_"+str(stop_index)+".png")	                
+	                plt.savefig("OutputPlots/"+test_name+"_displacements_dx_img_" + str(initial_start_index)+"_img_"+str(stop_index)+".png")	                
 	                
 	                fig = plt.figure("Displacementsdy between img " + str(initial_start_index)+" and img "+str(stop_index)) 
 	                
@@ -291,8 +297,8 @@ def DIC(prova,format, vel, dim_pixel, frame_rate, start_index, levels, image_tim
 	                cb2.set_label('$mm$')
 	                mng = plt.get_current_fig_manager()
 	                
-	                plt.savefig("OutputPlots/"+prova+"displacements_img_" + str(initial_start_index)+"_img_"+str(stop_index)+".png")
-	                plt.savefig("GIF/"+prova+"displacementsdy_img_" + str(initial_start_index)+"_img_"+str(stop_index)+".png")
+	                plt.savefig("OutputPlots/"+test_name+"_displacements_img_" + str(initial_start_index)+"_img_"+str(stop_index)+".png")
+	                plt.savefig("GIF/"+test_name+"_displacements_dy_img_" + str(initial_start_index)+"_img_"+str(stop_index)+".png")
 	
 	                operatore = np.matrix([-1.,0,1.])
 	                print '-----------'
@@ -350,19 +356,19 @@ def DIC(prova,format, vel, dim_pixel, frame_rate, start_index, levels, image_tim
 	                    
 	                plt.show()
 
-                        #####  PLOTS  
+	                #####  PLOTS  
 	                #soglia_inf = 0
 	                #soglia_sup = levels*spost_atteso_pixel*1.1 
-                        #soglia_sup_mm = levels*spost_atteso_pixel*dim_pixel*1.1
+	                #soglia_sup_mm = levels*spost_atteso_pixel*dim_pixel*1.1
 	                #soglia_sup_mm = 0.06
 	                
 	                ########### QUIVER PLOT  ########### 
 
-                        # Copy the result values in a new array 
-                        results2 =  results_mm.copy()
-                        print  np.max(results2[:,3]), np.min(results2[:,3])
+	                # Copy the result values in a new array 
+	                results2 =  results_mm.copy()
+	                print  np.max(results2[:,3]), np.min(results2[:,3])
 
-                        # Remove strains whose absolute value is greater than soglia_sup and lower than soglia_inf
+	                # Remove strains whose absolute value is greater than soglia_sup and lower than soglia_inf
 	                # limite_inf = np.where(results_mm2[:,3]<soglia_inf)[0]
 	                # results_mm2 = np.delete(results_mm2, limite_inf, axis=0)
 	                # limite_sup = np.where(results_mm2[:,3]>soglia_sup_mm)[0]
@@ -377,7 +383,7 @@ def DIC(prova,format, vel, dim_pixel, frame_rate, start_index, levels, image_tim
 	                nz.autoscale(results2[:,4]) 
 	                fig = plt.figure("img " + str(initial_start_index)+" - img "+str(stop_index))
 	                ax = fig.add_subplot(111)
-                        plt.imshow(crop_img1, cmap=plt.cm.gray, origin='upper')
+	                plt.imshow(crop_img1, cmap=plt.cm.gray, origin='upper')
 	                plt.title("img " + str(initial_start_index)+" - img "+str(stop_index))
 	                ax.set_color_cycle(['red', 'black', 'yellow'])
 	                # Same scale on the x and y axes
@@ -391,7 +397,7 @@ def DIC(prova,format, vel, dim_pixel, frame_rate, start_index, levels, image_tim
 
 	                # Colorbar
 	                cax,_ = mcolorbar.make_axes(plt.gca())
-	                	                
+
 	                soglia_sup_prova_mm = np.nanmax(results2[:,4])
 	                soglia_inf_prova_mm = np.nanmin(results2[:,4])
 	                
@@ -403,35 +409,35 @@ def DIC(prova,format, vel, dim_pixel, frame_rate, start_index, levels, image_tim
 	                #cb = mcolorbar.ColorbarBase(cax, cmap=cm.jet)#, norm=mcolors.Normalize(vmin=soglia_inf, vmax=soglia_sup_mm))
 	                #cb.set_clim(soglia_inf, soglia_sup_mm)# it doesn't work
 	                cb.set_label('mm')
-	                plt.savefig("GIFfrec/"+prova+"_freccette_img_" + str(initial_start_index)+"_img_"+str(stop_index)+".png")
+	                plt.savefig("GIFfrec/"+test_name+"_freccette_img_" + str(initial_start_index)+"_img_"+str(stop_index)+".png")
 	                mng = plt.get_current_fig_manager()
 	                #mng.window.showMaximized()
 	                
-	                #with open("OutputPlots/"+prova+"_results_mm_dy"+str(initial_start_index)+"_"+str(stop_index)+".txt","w") as file_stats:
+	                #with open("OutputPlots/"+test_name+"_results_mm_dy"+str(initial_start_index)+"_"+str(stop_index)+".txt","w") as file_stats:
 		               # for i in xrange(np.shape(dy)[0]):
 			              # for j in xrange(np.shape(dy)[1]):
 				             # file_stats.write(str(dy[i,j])+'\t')
 			              # file_stats.write('\n')
-                        with open("OutputPlots/"+prova+"_results_mm_dy"+str(initial_start_index)+"_"+str(stop_index)+".txt","w") as file_stats:
+                        with open("OutputPlots/"+test_name+"_results_mm_dy_"+str(initial_start_index)+"_"+str(stop_index)+".txt","w") as file_stats:
 		                for i in xrange(np.shape(dy)[0]):
 			                for j in xrange(np.shape(dy)[1]):
 				               file_stats.write(str(dy[i,j])+'\t')
 			                file_stats.write('\n')
 			                
 			                
-			with open("OutputPlots/"+prova+"_results_mm_Gy"+str(initial_start_index)+"_"+str(stop_index)+".txt","w") as file_stats:
+			with open("OutputPlots/"+test_name+"_results_mm_Gy_"+str(initial_start_index)+"_"+str(stop_index)+".txt","w") as file_stats:
 		                for i in xrange(np.shape(Gy)[0]):
 			                for j in xrange(np.shape(Gy)[1]):
 				               file_stats.write(str(Gy[i,j])+'\t')
 	                                file_stats.write('\n')
 	                                
-	               	with open("OutputPlots/"+prova+"_results_mm_Gx"+str(initial_start_index)+"_"+str(stop_index)+".txt","w") as file_stats:
+	               	with open("OutputPlots/"+test_name+"_results_mm_Gx_"+str(initial_start_index)+"_"+str(stop_index)+".txt","w") as file_stats:
 		                for i in xrange(np.shape(Gx)[0]):
 			                for j in xrange(np.shape(Gx)[1]):
 				              file_stats.write(str(Gx[i,j])+'\t')
 				        file_stats.write('\n') 
 			
-			with open("OutputPlots/"+prova+"_results_mm_dx"+str(initial_start_index)+"_"+str(stop_index)+".txt","w") as file_stats:
+			with open("OutputPlots/"+test_name+"_results_mm_dx_"+str(initial_start_index)+"_"+str(stop_index)+".txt","w") as file_stats:
 		                for i in xrange(np.shape(dx)[0]):
 			                for j in xrange(np.shape(dx)[1]):
 				               file_stats.write(str(dx[i,j])+'\t')
@@ -440,41 +446,41 @@ def DIC(prova,format, vel, dim_pixel, frame_rate, start_index, levels, image_tim
         ########## OUTPUT FILES ###########
 	
  
-	with open("OutputPlots/"+prova+"_results_mm_"+str(initial_start_index)+"_"+str(stop_index)+".txt","w") as file_stats:
+	with open("OutputPlots/"+test_name+"_results_mm_"+str(initial_start_index)+"_"+str(stop_index)+".txt","w") as file_stats:
 		for k in xrange(len(results_mm)):
 			file_stats.write(str(results_mm[k,0])+'\t'+str(results_mm[k,1])+'\t'+str(results_mm[k,2])+'\t'+str(results_mm[k,3])+'\t'+str(results_mm[k,4])+'\t'+str(results_mm[k,5])+'\n')
    
-	with open("OutputPlots/"+prova+"_results_mm_Gx"+str(initial_start_index)+"_"+str(stop_index)+".txt","w") as file_stats:
+	with open("OutputPlots/"+test_name+"_results_mm_Gx"+str(initial_start_index)+"_"+str(stop_index)+".txt","w") as file_stats:
 		for i in xrange(np.shape(Gx)[0]):
 			for j in xrange(np.shape(Gx)[1]):
 				file_stats.write(str(Gx[i,j])+'\n')
 		
-	with open("OutputPlots/"+prova+"_results_mm_Gy"+str(initial_start_index)+"_"+str(stop_index)+".txt","w") as file_stats:
+	with open("OutputPlots/"+test_name+"_results_mm_Gy"+str(initial_start_index)+"_"+str(stop_index)+".txt","w") as file_stats:
 		for i in xrange(np.shape(Gy)[0]):
 			for j in xrange(np.shape(Gy)[1]):
 				file_stats.write(str(Gy[i,j])+'\t')
 	                file_stats.write('\n')
 	                
-	with open("OutputPlots/"+prova+"_results_mm_dy"+str(initial_start_index)+"_"+str(stop_index)+".txt","w") as file_stats:
+	with open("OutputPlots/"+test_name+"_results_mm_dy"+str(initial_start_index)+"_"+str(stop_index)+".txt","w") as file_stats:
 		for i in xrange(np.shape(dy)[0]):
 			for j in xrange(np.shape(dy)[1]):
 				file_stats.write(str(dy[i,j])+'\t')
 			file_stats.write('\n')
 			
-	with open("OutputPlots/"+prova+"_results_mm_dx"+str(initial_start_index)+"_"+str(stop_index)+".txt","w") as file_stats:
+	with open("OutputPlots/"+test_name+"_results_mm_dx"+str(initial_start_index)+"_"+str(stop_index)+".txt","w") as file_stats:
 		for i in xrange(np.shape(dx)[0]):
 			for j in xrange(np.shape(dx)[1]):
 				file_stats.write(str(dx[i,j])+'\t')
 			file_stats.write('\n')		
 			
  
-        ########### SECTION PLOT ########### 
+    ########### SECTION PLOT ########### 
         
 	plt.figure("Sample central section")
 	plt.plot(dy[:,np.shape(dy)[1]/2])
 	plt.ylabel('y displacements (mm)')
 	plt.xlabel('y axis on the grid nodes (mm)')
-	plt.savefig("OutputPlots/"+prova+"_sezione_img_" + str(initial_start_index)+"_img_"+str(stop_index)+".png")
+	plt.savefig("OutputPlots/"+test_name+"_sezione_img_" + str(initial_start_index)+"_img_"+str(stop_index)+".png")
 	plt.show()
 	return msg
 
@@ -492,8 +498,7 @@ def gif(path1,filename):
            img = cv2.imread(img_name) 
            imgs.append(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
            #images.append(io.imread(img_name))
-
-                
+  
     #print writeGif.__doc__
     #io.mimsave(path1+'surface1.gif', images, duration = 1)
 

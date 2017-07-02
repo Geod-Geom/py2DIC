@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
+'''
 
  py2DIC
  2D Digital Image Correlation software
@@ -23,7 +23,7 @@
  A new Digital Image Correlation software for displacements field measurement in structural applications.
  ISPRS - International Archives of the Photogrammetry, Remote Sensing and Spatial Information Sciences.
 
-"""
+'''
 
 import sys
 import os
@@ -59,8 +59,8 @@ class Form(QDialog):
         super(Form, self).__init__(parent)
         
         global path
-                
-        self.setWindowTitle("Digital Image Correlation by AGG")
+		
+        self.setWindowTitle("py2DIC by AGG")
         
         # Setting the scroll area
         self.scrollArea = QScrollArea(self)
@@ -105,10 +105,10 @@ class Form(QDialog):
         self.lformat.setText("JPG")
         
         self.l_prova= QLabel(self.scrollAreaWidgetContents)
-        self.l_prova.setText("Test name")
+        self.l_prova.setText("Test path")
         self.le_prova = QLineEdit(self.scrollAreaWidgetContents)
         self.le_prova.setObjectName("prova")
-        self.le_prova.setText("ProvaMurQM1")
+        self.le_prova.setText(c.absolute_path_of_images)
 
         self.l2 = QLabel(self.scrollAreaWidgetContents)
         self.l2.setText("Imposed deformation velocity [mm/m]")
