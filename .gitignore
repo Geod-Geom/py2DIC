@@ -1,0 +1,5 @@
+sources/*.pyc
+sources/GIF/
+sources/GIFfrec/
+sources/OutputPlots/
+sources/images2gif.py
