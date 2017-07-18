@@ -28,7 +28,7 @@
 import sys
 import os
 from PyQt4.QtCore import SIGNAL
-from PyQt4.QtGui import QDialog, QCheckBox, QWidget, QApplication, QVBoxLayout,QPushButton, QLineEdit, QLabel, QTextBrowser,QPixmap, QScrollArea, QRadioButton
+from PyQt4.QtGui import *
 import DIC_for_GUI as DIC_roby
 from matplotlib import pyplot as plt
 import subprocess

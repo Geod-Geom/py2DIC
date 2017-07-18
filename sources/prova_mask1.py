@@ -26,7 +26,7 @@
 '''
 
 from PyQt4.QtCore import Qt
-from PyQt4.QtGui import QBrush, QHBoxLayout,QFileDialog, QMainWindow, QGraphicsView, QGraphicsScene, QPen, QGraphicsPixmapItem, QWidget, QApplication, QPixmap
+from PyQt4.QtGui import *
 import sys
 import numpy as np
 import os
