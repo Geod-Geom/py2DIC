@@ -224,19 +224,19 @@ def DIC(images_absolute_path,format, vel, dim_pixel, frame_rate, start_index, le
                     TP_search_y = Delta_Y+c+indy    # end point y 
 
                     # Store the results in an array 
-                    results[k,0] = TP_temp_x        # start point x
-                    results[k,1] = TP_temp_y        # start point y
-                    results[k,2] = TP_search_x-TP_temp_x + results[k,2]  # dx
-                    results[k,3] = TP_search_y-TP_temp_y + results[k,3] # dy
-                    results[k,4] = np.sqrt((results[k,3])**2 + (results[k,2] )**2)  # modulo
+                    results[k,0] = TP_temp_x        # start point x [pixel]
+                    results[k,1] = TP_temp_y        # start point y [pixel]
+                    results[k,2] = TP_search_x-TP_temp_x + results[k,2]  # dx [pixel]
+                    results[k,3] = TP_search_y-TP_temp_y + results[k,3]  # dy [pixel]
+                    results[k,4] = np.sqrt((results[k,3])**2 + (results[k,2] )**2)  # displ. modulo [pixel]
                     results[k,5] = maxcc+results[k,5]
 
                     # Convert the pixel results into millimetres 
-                    results_mm[k,0] = TP_temp_x     # start point x pixel
-                    results_mm[k,1] = TP_temp_y     # start point y pixel
-                    results_mm[k,2] = TP_search_x*dim_pixel-TP_temp_x*dim_pixel + results_mm[k,2]  # dx mm
-                    results_mm[k,3] = TP_search_y*dim_pixel-TP_temp_y*dim_pixel + results_mm[k,3] # dy mm
-                    results_mm[k,4] = np.sqrt((results_mm[k,3])**2 + (results_mm[k,2] )**2)          # absolute value mm
+                    results_mm[k,0] = TP_temp_x     # start point x [pixel]
+                    results_mm[k,1] = TP_temp_y     # start point y [pixel]
+                    results_mm[k,2] = TP_search_x*dim_pixel-TP_temp_x*dim_pixel + results_mm[k,2]  # dx [mm]
+                    results_mm[k,3] = TP_search_y*dim_pixel-TP_temp_y*dim_pixel + results_mm[k,3]  # dy [mm]
+                    results_mm[k,4] = np.sqrt((results_mm[k,3])**2 + (results_mm[k,2] )**2)        # displ. modulo [mm]
                     results_mm[k,5] = maxcc+results_mm[k,5]
                     
                     k=k+1
@@ -388,7 +388,15 @@ def DIC(images_absolute_path,format, vel, dim_pixel, frame_rate, start_index, le
             plt.xlabel('pixels')
 
             # Plot quiver
-            plt.quiver(results2[:,0], results2[:,1], results2[:,2]/results2[:,4], results2[:,3]/results2[:,4],angles='xy', scale=30,color=cm.jet(nz(results2[:,4])))
+            plt.quiver( results2[:,0], #start x  [pixel]
+                        results2[:,1], #start y  [pixel]
+                        results2[:,2]/results2[:,4], #dx / |displ| [mm/mm]
+                        results2[:,3]/results2[:,4], #dy / |displ| [mm/mm]
+                        angles='xy', 
+                        scale=30,
+                        color=cm.jet(nz(results2[:,4])),
+                        edgecolor='k', # edge color of the quivers
+                        linewidth=.2)
 
             # Colorbar
             cax,_ = mcolorbar.make_axes(plt.gca())
