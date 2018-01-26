@@ -11,7 +11,7 @@
  Andrea Nascetti    <andrea.nascetti@uniroma1.it>,  
  Martina Di Rita    <martina.dirita@uniroma1.it>, 
  Roberta Ravanelli  <roberta.ravanelli@uniroma1.it>
- Valeria Belloni    <valeria.belloni01@gmail.com>
+ Valeria Belloni    <valeria.belloni@uniroma1.it>
  and is subject to the terms and conditions of the
  GNU Lesser General Public License Version 2.1
  The license text is available from
@@ -19,9 +19,10 @@
  
  More information in the following scientific paper:
 
- R. Ravanelli, A. Nascetti, M. Di Rita, V. Belloni, D. Mattei, N. Nisticò, M. Crespi. (2017 - in press),
- A new Digital Image Correlation software for displacements field measurement in structural applications.
- ISPRS - International Archives of the Photogrammetry, Remote Sensing and Spatial Information Sciences.
+ Ravanelli Roberta, Nascetti Andrea, Di Rita Martina, Belloni Valeria, Mattei Domitilla, Nisticò Nicola, and Crespi Mattia: A new Digital
+ Image Correlation software for displacements field measurement in structural applications, The International
+ Archives of the Photogrammetry, Remote Sensing and Spatial Information Sciences, XLII-4/W2, 139-145,
+ https://doi.org/10.5194/isprs-archives-XLII-4-W2-139-2017, 2017
 
 '''
 
