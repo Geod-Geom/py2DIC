@@ -202,10 +202,6 @@ def DIC(images_absolute_path,format, vel, dim_pixel, frame_rate, start_index, le
             img1r = crop_img1.copy()
             img2r = crop_img2.copy()
 
-            '''cv2.namedWindow("b", cv2.WINDOW_NORMAL)
-            cv2.imshow("b", img1r)
-            cv2.waitKey()'''
-
             # Cycle before along x and then y to fill in the rows and then the columns 	
             for j in range(np.int(Dim_y/(temp_dim+b+c))-1):
                 for i in range(np.int(Dim_x/(temp_dim+d+c))-1):
@@ -250,13 +246,16 @@ def DIC(images_absolute_path,format, vel, dim_pixel, frame_rate, start_index, le
             dx.shape = (np.int(Dim_y/(temp_dim+b+c))-1, np.int(Dim_x/(temp_dim+d+c))-1) # the displacements shold have the dimensions of the research grid
             dy.shape = (np.int(Dim_y/(temp_dim+b+c))-1, np.int(Dim_x/(temp_dim+d+c))-1)
 
-            ####  PLOTS
-            soglia_inf_y = -12.4
-            soglia_sup_mm_y =  -4.5#np.inf#levels*spost_atteso_pixel*dim_pixel*1.1
-            soglia_inf_x = -1.35
-            soglia_sup_mm_x =  0
-            soglia_inf_def = -4/100.0
-            soglia_sup_def = 4/100.0
+            ####  PLOTS 
+            # threshold values set for the Plate Hole DIC Challenge image collection
+            soglia_inf_y    = - 12.4
+            soglia_sup_mm_y = - 4.5#np.inf#levels*spost_atteso_pixel*dim_pixel*1.1
+            soglia_inf_x    = - 1.35
+            soglia_sup_mm_x =   0
+            soglia_inf_Gx   = - 4/100.0
+            soglia_sup_Gx   =   4.5/100.0
+            soglia_inf_Gy   = - 4/100.0
+            soglia_sup_Gy   =   4/100.0
 
             ########### DISPLACEMENTS PLOT ########### 
             indici_inf = np.where(dy < soglia_inf_y) # Consider only positive dy
@@ -283,8 +282,10 @@ def DIC(images_absolute_path,format, vel, dim_pixel, frame_rate, start_index, le
             fig = plt.figure("Displacements dx between img " + str(initial_start_index)+" and img "+str(stop_index))
             plt.title("$Horizontal\;displacements: u$")
             plt.gca().set_aspect('equal', adjustable='box')
-            plt.imshow(dx, cmap=cm.jet )
+            #plt.imshow(dx, cmap=cm.jet )
+            plt.imshow(dx, cmap=cm.jet, norm=mcolors.Normalize(vmin=soglia_inf_x, vmax=soglia_sup_mm_x), interpolation = 'None')
             cb=plt.colorbar() 
+            cb.set_clim(soglia_inf_x, soglia_sup_mm_x)
             cb.set_label('$mm$')
             plt.savefig("OutputPlots/"+test_name+"_displacements_dx_img_" + str(initial_start_index)+"_img_"+str(stop_index)+".png")	                
 
@@ -323,27 +324,26 @@ def DIC(images_absolute_path,format, vel, dim_pixel, frame_rate, start_index, le
             ########### STRAINS PLOT ###########
 
             # Remove the absolute value of strains greater than 4% 
-            indici_sup_def = np.where(Gy > soglia_sup_def) 
+            indici_sup_def = np.where(Gy > soglia_sup_Gy) 
             ix = indici_sup_def [1] # x index
             iy = indici_sup_def [0] # y index
             Gy[ iy, ix ] = float('NaN')
-            indici_inf_def = np.where(Gy < soglia_inf_def)
+            indici_inf_def = np.where(Gy < soglia_inf_Gy)
             ix = indici_inf_def [1] # x index
             iy = indici_inf_def [0] # y index
             Gy[ iy, ix ] =float('NaN')
 
             # Remove the absolute value of strains greater than 4% 
-            indici_sup_def = np.where(Gx > soglia_sup_def) 
+            indici_sup_def = np.where(Gx > soglia_sup_Gx) 
             ix = indici_sup_def [1] # x index
             iy = indici_sup_def [0] # y index
             Gx[ iy, ix ] = float('NaN')
-            indici_inf_def = np.where(Gx < soglia_inf_def)
+            indici_inf_def = np.where(Gx < soglia_inf_Gx)
             ix = indici_inf_def [1] # x index
             iy = indici_inf_def [0] # y index
             Gx[ iy, ix ] =float('NaN')
 
             fig =  plt.figure("Gx between img " + str(initial_start_index)+" and img "+str(stop_index))
-
             plt.title("{\partial u \over \partial x}")
             plt.imshow(Gx, cmap=cm.jet)
             plt.colorbar()
@@ -354,11 +354,6 @@ def DIC(images_absolute_path,format, vel, dim_pixel, frame_rate, start_index, le
             plt.colorbar()
             plt.show()
 
-            #####  PLOTS
-            #soglia_inf = 0
-            #soglia_sup = levels*spost_atteso_pixel*1.1 
-            #soglia_sup_mm = levels*spost_atteso_pixel*dim_pixel*1.1
-            #soglia_sup_mm = 0.06
 
             ########### QUIVER PLOT  ########### 
 
