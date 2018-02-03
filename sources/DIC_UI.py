@@ -28,8 +28,9 @@
 
 import sys
 import os
-from PyQt4.QtCore import SIGNAL
-from PyQt4.QtGui import *
+from PyQt5.QtCore import Qt
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
 import DIC_for_GUI as DIC_roby
 from matplotlib import pyplot as plt
 import subprocess
@@ -88,7 +89,7 @@ class Form(QDialog):
         self.l1.setText("Pixel dimension [mm]")
         self.le_pixel_dimension = QLineEdit(self.scrollAreaWidgetContents)
         self.le_pixel_dimension.setObjectName("DimPi")
-        self.le_pixel_dimension.setText("0.023752851")
+        self.le_pixel_dimension.setText("1")#0.023752851
 
         self.l_frame_rate = QLabel(self.scrollAreaWidgetContents)
         self.l_frame_rate.setText("Camera acquisition time [s]")
@@ -118,19 +119,19 @@ class Form(QDialog):
         self.lsi.setText("Start index")
         self.lesi = QLineEdit(self.scrollAreaWidgetContents)
         self.lesi.setObjectName("start_index")
-        self.lesi.setText("1")
+        self.lesi.setText("0")#1
 
         self.lstopi = QLabel(self.scrollAreaWidgetContents)
         self.lstopi.setText("Levels")
         self.lestopi = QLineEdit(self.scrollAreaWidgetContents)
         self.lestopi.setObjectName("levels")
-        self.lestopi.setText("3")
+        self.lestopi.setText("1")#3
 
         self.lsamp = QLabel(self.scrollAreaWidgetContents)
         self.lsamp.setText("Image time sampling")
         self.lesamp = QLineEdit(self.scrollAreaWidgetContents)
         self.lesamp.setObjectName("image_time_sampling")
-        self.lesamp.setText("4")        
+        self.lesamp.setText("1") #4       
 
         self.pb = QPushButton(self.scrollAreaWidgetContents)
         self.pb.setObjectName("Run")
@@ -140,7 +141,7 @@ class Form(QDialog):
         self.l_tem_width.setText("Template width [pixel]")
         self.le_tem_width = QLineEdit(self.scrollAreaWidgetContents)
         self.le_tem_width.setObjectName("templateWidth")
-        self.le_tem_width.setText("65")
+        self.le_tem_width.setText("25")#65
 
         self.l_b = QLabel(self.scrollAreaWidgetContents)
         self.l_b.setText("Edge y [pixel]")
@@ -196,8 +197,7 @@ class Form(QDialog):
         self.verticalLayoutScroll.addWidget(self.display)
 
         # Button clicked event 
-        self.connect(self.pb, SIGNAL("clicked()"),self.button_click)
-
+        self.pb.clicked.connect(self.button_click)
 
     # Button clicked event handler
     def button_click(self):
@@ -266,5 +266,3 @@ form.show()
 form.resize(500,900)
 
 sys.exit(app.exec_())
-
-

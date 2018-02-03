@@ -26,15 +26,18 @@
 
 '''
 
-from PyQt4.QtCore import Qt
-from PyQt4.QtGui import *
+from PyQt5.QtCore import Qt
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
 import sys
 import numpy as np
 import os
 import pdb
+from PyQt5.QtCore import pyqtRemoveInputHook
 
-window_width = 900
-window_height = 500
+
+window_width = 500
+window_height = 900
 
 rectangley1 = None
 rectangley2 = None 
@@ -141,11 +144,11 @@ class MainWindow(QMainWindow):
     def openImage(self):
         global absolute_path_of_images
         fname = QFileDialog.getOpenFileName(self, "Open image", ".", "Image Files (*.bmp *.JPG *.png *.xpm)")
-        absolute_path_of_images = str(fname[:-1*len(os.path.basename(str(fname)))])
+        absolute_path_of_images = str(fname[0][:-1*len(os.path.basename(str(fname[0])))])
 
-        if fname.isEmpty():
+        if len(absolute_path_of_images)==0:
             return None
-        return QPixmap(fname)
+        return QPixmap(fname[0])
 
 
 app = QApplication(sys.argv)

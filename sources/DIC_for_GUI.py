@@ -37,7 +37,7 @@ from scipy import signal as sg
 import os
 from images2gif import writeGif
 import prova_mask1 as c
-from PyQt4.QtCore import pyqtRemoveInputHook
+from PyQt5.QtCore import pyqtRemoveInputHook
 import pdb
 
 def template_match(img_master, img_slave, method = 'cv2.TM_CCOEFF_NORMED', mlx = 1, mly = 1, show=True):    
@@ -83,7 +83,7 @@ def template_match(img_master, img_slave, method = 'cv2.TM_CCOEFF_NORMED', mlx =
 
 def DIC(images_absolute_path,format, vel, dim_pixel, frame_rate, start_index, levels, image_time_sampling , temp_dim, b, d, recty1, recty2, rectx1, rectx2, c =0):
     plt.close("all")
-    plt.switch_backend("Qt4Agg")
+    plt.switch_backend("Qt5Agg")
 
     # find the last folder, which we assume being the name of the test
     test_name = os.path.basename(os.path.normpath(images_absolute_path))
@@ -93,7 +93,7 @@ def DIC(images_absolute_path,format, vel, dim_pixel, frame_rate, start_index, le
 
     print('Backend: {}'.format(plt.get_backend()))
     print 'Test:', test_name
-    plt.rc('text', usetex=True)
+    plt.rc('text', usetex=False)
 
     msg = test_name + "\n"
     msg = msg + '-----------\n'
@@ -105,10 +105,10 @@ def DIC(images_absolute_path,format, vel, dim_pixel, frame_rate, start_index, le
     format = '.'+format
 
     img_names = glob.glob( images_absolute_path +"/*"+format)
-    img_names.sort()
 
     # Read the first image to obtain information about the camera resolution 
     img1 = cv2.imread(img_names[0], 0)
+
     crop_img1 = img1[recty1:recty2, rectx1:rectx2]
     #img1r = img1.T.copy() # Return the transpose (otherwise the quiver image is horizontal but the images are vertical)
     Dim_x = np.shape(crop_img1)[1] # width 
@@ -244,58 +244,59 @@ def DIC(images_absolute_path,format, vel, dim_pixel, frame_rate, start_index, le
 
             start_index = stop_index
 
-            dx = results_mm[:,2].copy()	
+            dx = results_mm[:,2].copy()
             dy = results_mm[:,3].copy()
 
             dx.shape = (np.int(Dim_y/(temp_dim+b+c))-1, np.int(Dim_x/(temp_dim+d+c))-1) # the displacements shold have the dimensions of the research grid
             dy.shape = (np.int(Dim_y/(temp_dim+b+c))-1, np.int(Dim_x/(temp_dim+d+c))-1)
 
             ####  PLOTS
-            soglia_inf = 0
-            #soglia_sup_mm = 1.26
-            soglia_sup_mm = levels*spost_atteso_pixel*dim_pixel*1.1
+            soglia_inf_y = -12.4
+            soglia_sup_mm_y =  -4.5#np.inf#levels*spost_atteso_pixel*dim_pixel*1.1
+            soglia_inf_x = -1.35
+            soglia_sup_mm_x =  0
             soglia_inf_def = -4/100.0
             soglia_sup_def = 4/100.0
 
             ########### DISPLACEMENTS PLOT ########### 
-            #boh = results_mm[:,4]
-            #boh.shape = (np.int(Dim_y/(temp_dim+b+c))-1, np.int(Dim_x/(temp_dim+b+c))-1)
-
-            indici_inf = np.where(dy < soglia_inf) # Consider only positive dy
+            indici_inf = np.where(dy < soglia_inf_y) # Consider only positive dy
             ix = indici_inf [1] # x index
             iy = indici_inf [0] # y index
             dy[ iy, ix ] = float('NaN')
 
-            indici_sup = np.where(dy > soglia_sup_mm) # Consider only positive dy
+            indici_sup = np.where(dy > soglia_sup_mm_y) # Consider only positive dy
             ix = indici_sup [1] # x index
             iy = indici_sup [0] # y index
             dy[ iy, ix ] = float('NaN')
+            
+            indici_inf = np.where(dx < soglia_inf_x) # Consider only positive dy
+            ix = indici_inf [1] # x index
+            iy = indici_inf [0] # y index
+            dx[ iy, ix ] = float('NaN')
+
+            indici_sup = np.where(dx > soglia_sup_mm_x) # Consider only positive dy
+            ix = indici_sup [1] # x index
+            iy = indici_sup [0] # y index
+            dx[ iy, ix ] = float('NaN')
 
 
-            fig = plt.figure("Displacementsdx between img " + str(initial_start_index)+" and img "+str(stop_index))
-
+            fig = plt.figure("Displacements dx between img " + str(initial_start_index)+" and img "+str(stop_index))
             plt.title("$Horizontal\;displacements: u$")
             plt.gca().set_aspect('equal', adjustable='box')
             plt.imshow(dx, cmap=cm.jet )
-            #pyqtRemoveInputHook()
-            #pdb.set_trace()
-
             cb=plt.colorbar() 
             cb.set_label('$mm$')
-
             plt.savefig("OutputPlots/"+test_name+"_displacements_dx_img_" + str(initial_start_index)+"_img_"+str(stop_index)+".png")	                
 
-            fig = plt.figure("Displacementsdy between img " + str(initial_start_index)+" and img "+str(stop_index)) 
 
+            fig = plt.figure("Displacements dy between img " + str(initial_start_index)+" and img "+str(stop_index)) 
             plt.title("$Vertical\;displacements: v$")
             plt.gca().set_aspect('equal', adjustable='box')
-            plt.imshow(dy, cmap=cm.jet, norm=mcolors.Normalize(vmin=soglia_inf, vmax=soglia_sup_mm))
-
+            plt.imshow(dy, cmap=cm.jet, norm=mcolors.Normalize(vmin=soglia_inf_y, vmax=soglia_sup_mm_y))
             cb2=plt.colorbar() 
-            cb2.set_clim(soglia_inf, soglia_sup_mm)
+            cb2.set_clim(soglia_inf_y, soglia_sup_mm_y)
             cb2.set_label('$mm$')
             mng = plt.get_current_fig_manager()
-
             plt.savefig("OutputPlots/"+test_name+"_displacements_img_" + str(initial_start_index)+"_img_"+str(stop_index)+".png")
             plt.savefig("GIF/"+test_name+"_displacements_dy_img_" + str(initial_start_index)+"_img_"+str(stop_index)+".png")
 
