@@ -209,7 +209,7 @@ class First(QDialog):
         self.l1.setText("Pixel dimension [mm]")
         self.le_pixel_dimension = QLineEdit(self.scrollAreaWidgetContents)
         self.le_pixel_dimension.setObjectName("DimPi")
-        self.le_pixel_dimension.setText("1")#0.023752851
+        self.le_pixel_dimension.setText("1")
 
         self.l_frame_rate = QLabel(self.scrollAreaWidgetContents)
         self.l_frame_rate.setText("Camera acquisition time [s]")
@@ -261,19 +261,19 @@ class First(QDialog):
         self.l_tem_width.setText("Template width [pixel]")
         self.le_tem_width = QLineEdit(self.scrollAreaWidgetContents)
         self.le_tem_width.setObjectName("templateWidth")
-        self.le_tem_width.setText("25")#65
+        self.le_tem_width.setText("9")
 
         self.l_b = QLabel(self.scrollAreaWidgetContents)
         self.l_b.setText("Edge y [pixel]")
         self.le_b = QLineEdit(self.scrollAreaWidgetContents)
         self.le_b.setObjectName("bordoy")
-        self.le_b.setText("28")
+        self.le_b.setText("12")
 
         self.l_b1 = QLabel(self.scrollAreaWidgetContents)
         self.l_b1.setText("Edge x [pixel]")
         self.le_b1 = QLineEdit(self.scrollAreaWidgetContents)
         self.le_b1.setObjectName("bordox")
-        self.le_b1.setText("5")
+        self.le_b1.setText("2")
 
         self.display = QTextBrowser(self.scrollAreaWidgetContents)
         self.display.verticalScrollBar().setValue(0)

@@ -132,8 +132,8 @@ def DIC(images_absolute_path,format, vel, dim_pixel, frame_rate, start_index, le
 
     # Array where to store the results
     # we cumulate the displacements computed for each level
-    results = np.zeros(((np.int(Dim_x/(temp_dim+d+c))-1)*(np.int(Dim_y/(temp_dim+b+c))-1),6))
-    results_mm = np.zeros(((np.int(Dim_x/(temp_dim+d+c))-1)*(np.int(Dim_y/(temp_dim+b+c))-1),6))
+    results = np.zeros(((np.int(Dim_x/(temp_dim+2*d+c)))*(np.int(Dim_y/(temp_dim+2*b+c))),6))
+    results_mm = np.zeros(((np.int(Dim_x/(temp_dim+2*d+c)))*(np.int(Dim_y/(temp_dim+2*b+c))),6))
     for l in range(levels):
 
             stop_index = start_index + image_time_sampling
@@ -201,11 +201,11 @@ def DIC(images_absolute_path,format, vel, dim_pixel, frame_rate, start_index, le
             img2r = crop_img2.copy()
 
             # Cycle before along x and then y to fill in the rows and then the columns 	
-            for j in range(np.int(Dim_y/(temp_dim+b+c))-1):
-                for i in range(np.int(Dim_x/(temp_dim+d+c))-1):
+            for j in range(np.int(Dim_y/(temp_dim+2*b+c))):
+                for i in range(np.int(Dim_x/(temp_dim+2*d+c))):
 
-                    Delta_X = i*(c+d+temp_dim)
-                    Delta_Y = j*(c+b+temp_dim)
+                    Delta_X = i*(c+2*d+temp_dim)
+                    Delta_Y = j*(c+2*b+temp_dim)
 
                     temp =        img1r[c+b+Delta_Y : c+b+Delta_Y+temp_dim  , c+d+Delta_X :  c+d+Delta_X+temp_dim  ]
                     search_area = img2r[c+Delta_Y :   c+Delta_Y+2*b+temp_dim, c+Delta_X   :  c+2*d+Delta_X+temp_dim  ]
@@ -241,8 +241,8 @@ def DIC(images_absolute_path,format, vel, dim_pixel, frame_rate, start_index, le
             dx = results_mm[:,2].copy()
             dy = results_mm[:,3].copy()
 
-            dx.shape = (np.int(Dim_y/(temp_dim+b+c))-1, np.int(Dim_x/(temp_dim+d+c))-1) # the displacements shold have the dimensions of the research grid
-            dy.shape = (np.int(Dim_y/(temp_dim+b+c))-1, np.int(Dim_x/(temp_dim+d+c))-1)
+            dx.shape = (np.int(Dim_y/(temp_dim+2*b+c)), np.int(Dim_x/(temp_dim+2*d+c))) # the displacements shold have the dimensions of the research grid
+            dy.shape = (np.int(Dim_y/(temp_dim+2*b+c)), np.int(Dim_x/(temp_dim+2*d+c)))
 
             ####  PLOTS 
             # threshold values set for the Plate Hole DIC Challenge image collection
