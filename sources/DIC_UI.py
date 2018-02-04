@@ -163,7 +163,7 @@ class Form(QDialog):
         self.gif=QLabel(self.scrollAreaWidgetContents)
         self.gif.setText("GIF")
         self.rdbUno=QCheckBox("",self)
-        self.rdbUno.setChecked(True)
+        self.rdbUno.setChecked(False)
 
         # Adding all the widgets to the scroll layout container
         self.verticalLayoutScroll.addWidget(label_image)

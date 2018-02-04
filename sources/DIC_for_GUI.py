@@ -35,7 +35,6 @@ import matplotlib.colors as mcolors
 import matplotlib.colorbar as mcolorbar
 from scipy import signal as sg
 import os
-from images2gif import writeGif
 import prova_mask1 as c
 from PyQt5.QtCore import pyqtRemoveInputHook
 import pdb
@@ -481,6 +480,7 @@ def DIC(images_absolute_path,format, vel, dim_pixel, frame_rate, start_index, le
 ########### GIF FUNCTION ###########
 
 def gif(path1,filename):
+    from images2gif import writeGif
     #import imageio as io
     imgs = []
     #images = []
