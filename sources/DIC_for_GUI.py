@@ -130,10 +130,14 @@ def DIC(images_absolute_path,format, vel, dim_pixel, frame_rate, start_index, le
     print "Dim x:", Dim_x
     print "Dim y:", Dim_y
 
+    # Dimensions of the matching grid
+    h = np.int(Dim_y/(temp_dim+2*b+c))# rows
+    w = np.int(Dim_x/(temp_dim+2*d+c))# columns
+    
     # Array where to store the results
     # we cumulate the displacements computed for each level
-    results = np.zeros(((np.int(Dim_x/(temp_dim+2*d+c)))*(np.int(Dim_y/(temp_dim+2*b+c))),6))
-    results_mm = np.zeros(((np.int(Dim_x/(temp_dim+2*d+c)))*(np.int(Dim_y/(temp_dim+2*b+c))),6))
+    results = np.zeros((h*w,6))
+    results_mm = np.zeros((h*w,6))
     for l in range(levels):
 
             stop_index = start_index + image_time_sampling
@@ -178,7 +182,6 @@ def DIC(images_absolute_path,format, vel, dim_pixel, frame_rate, start_index, le
                 crop_img1 = crop_img1.T.copy()
                 crop_img2 = crop_img2.T.copy()
 
-
             print '-----------'
             print "Camera resolution"
             print Dim_x, "x", Dim_y
@@ -201,19 +204,47 @@ def DIC(images_absolute_path,format, vel, dim_pixel, frame_rate, start_index, le
             img2r = crop_img2.copy()
 
             # Cycle before along x and then y to fill in the rows and then the columns 	
-            for j in range(np.int(Dim_y/(temp_dim+2*b+c))):
-                for i in range(np.int(Dim_x/(temp_dim+2*d+c))):
+            for j in range(h):# loop on rows (Y)
+                for i in range(w):# loop on columns (X)
 
                     Delta_X = i*(c+2*d+temp_dim)
                     Delta_Y = j*(c+2*b+temp_dim)
 
-                    temp =        img1r[c+b+Delta_Y : c+b+Delta_Y+temp_dim  , c+d+Delta_X :  c+d+Delta_X+temp_dim  ]
-                    search_area = img2r[c+Delta_Y :   c+Delta_Y+2*b+temp_dim, c+Delta_X   :  c+2*d+Delta_X+temp_dim  ]
+                    TP_temp_x = Delta_X+c+d+(temp_dim)/2.0 # x start
+                    TP_temp_y = Delta_Y+c+b+(temp_dim)/2.0 # y start
+
+                    start_x_template_slice = c+d+Delta_X
+                    stop_x_template_slice  = c+d+Delta_X+temp_dim
+                    start_y_template_slice = c+b+Delta_Y
+                    stop_y_template_slice  = c+b+Delta_Y+temp_dim
+
+                    shape_template = np.shape( img1r [  start_y_template_slice : stop_y_template_slice , start_x_template_slice : stop_x_template_slice ])
+
+                    #checking the template dimensions
+                    assert np.allclose(shape_template[0], temp_dim)
+                    assert np.allclose(shape_template[1], temp_dim)
+                    assert np.allclose(stop_y_template_slice - start_y_template_slice, temp_dim)
+                    assert np.allclose(stop_x_template_slice - start_x_template_slice, temp_dim)
+                    assert np.allclose(TP_temp_x, (start_x_template_slice+ stop_x_template_slice)/2.0)
+                    assert np.allclose(TP_temp_y, (start_y_template_slice+ stop_y_template_slice)/2.0)
+
+                    start_x_search_slice = c + Delta_X
+                    stop_x_search_slice  = c + Delta_X + 2*d + temp_dim
+                    start_y_search_slice = c + Delta_Y
+                    stop_y_search_slice  = c + Delta_Y + 2*b + temp_dim
+
+                    shape_search = np.shape( img2r [  start_y_search_slice : stop_y_search_slice , start_x_search_slice : stop_x_search_slice ])
+
+                    # checking the search area dimensions
+                    assert np.allclose((shape_search[0] - temp_dim) /2.0, b)
+                    assert np.allclose((shape_search[1] - temp_dim) /2.0, d)
+                    assert np.allclose(TP_temp_x, (start_x_search_slice+ stop_x_search_slice)/2.0)
+                    assert np.allclose(TP_temp_y, (start_y_search_slice+ stop_y_search_slice)/2.0)
+
+                    temp =        img1r [  start_y_template_slice : stop_y_template_slice , start_x_template_slice : stop_x_template_slice ]
+                    search_area = img2r [  start_y_search_slice : stop_y_search_slice , start_x_search_slice : stop_x_search_slice ]
 
                     indx,indy, maxcc = template_match(temp.astype('uint8'), search_area.astype('uint8'), mlx = 20, mly =2, show = False)
-
-                    TP_temp_x = Delta_X+c+d+1.0*temp_dim/2.0 # x start
-                    TP_temp_y = Delta_Y+c+b+1.0*temp_dim/2.0 # y start
 
                     TP_search_x = Delta_X+c+indx    # end point x 
                     TP_search_y = Delta_Y+c+indy    # end point y 
@@ -233,7 +264,7 @@ def DIC(images_absolute_path,format, vel, dim_pixel, frame_rate, start_index, le
                     results_mm[k,3] = TP_search_y*dim_pixel-TP_temp_y*dim_pixel + results_mm[k,3]  # dy [mm]
                     results_mm[k,4] = np.sqrt((results_mm[k,3])**2 + (results_mm[k,2] )**2)        # displ. modulo [mm]
                     results_mm[k,5] = maxcc+results_mm[k,5]
-                    
+
                     k=k+1
 
             start_index = stop_index
@@ -241,8 +272,8 @@ def DIC(images_absolute_path,format, vel, dim_pixel, frame_rate, start_index, le
             dx = results_mm[:,2].copy()
             dy = results_mm[:,3].copy()
 
-            dx.shape = (np.int(Dim_y/(temp_dim+2*b+c)), np.int(Dim_x/(temp_dim+2*d+c))) # the displacements shold have the dimensions of the research grid
-            dy.shape = (np.int(Dim_y/(temp_dim+2*b+c)), np.int(Dim_x/(temp_dim+2*d+c)))
+            dx.shape = (h, w) # the computed displacements have the dimensions of the matching grid
+            dy.shape = (h, w)
 
             ####  PLOTS 
             # threshold values set for the Plate Hole DIC Challenge image collection
