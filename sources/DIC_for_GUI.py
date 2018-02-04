@@ -411,58 +411,20 @@ def DIC(images_absolute_path,format, vel, dim_pixel, frame_rate, start_index, le
             mng = plt.get_current_fig_manager()
             #mng.window.showMaximized()
 
-            with open("OutputPlots/"+test_name+"_results_mm_dy_"+str(initial_start_index)+"_"+str(stop_index)+".txt","w") as file_stats:
-                        for i in xrange(np.shape(dy)[0]):
-                            for j in xrange(np.shape(dy)[1]):
-                                file_stats.write(str(dy[i,j])+'\t')
-                            file_stats.write('\n')
+            # Printing the files for the single level
+            np.savetxt("OutputPlots/"+test_name+"_results_mm_dx_"+str(initial_start_index)+"_"+str(stop_index)+".txt", dx, fmt = '%.5f')
+            np.savetxt("OutputPlots/"+test_name+"_results_mm_dy_"+str(initial_start_index)+"_"+str(stop_index)+".txt", dy, fmt = '%.5f')
+            np.savetxt("OutputPlots/"+test_name+"_results_mm_Gy_"+str(initial_start_index)+"_"+str(stop_index)+".txt", Gy, fmt = '%.7f')
+            np.savetxt("OutputPlots/"+test_name+"_results_mm_Gx_"+str(initial_start_index)+"_"+str(stop_index)+".txt", Gx, fmt = '%.7f')
 
-            with open("OutputPlots/"+test_name+"_results_mm_Gy_"+str(initial_start_index)+"_"+str(stop_index)+".txt","w") as file_stats:
-                        for i in xrange(np.shape(Gy)[0]):
-                            for j in xrange(np.shape(Gy)[1]):
-                               file_stats.write(str(Gy[i,j])+'\t')
-                            file_stats.write('\n')
 
-            with open("OutputPlots/"+test_name+"_results_mm_Gx_"+str(initial_start_index)+"_"+str(stop_index)+".txt","w") as file_stats:
-                        for i in xrange(np.shape(Gx)[0]):
-                            for j in xrange(np.shape(Gx)[1]):
-                              file_stats.write(str(Gx[i,j])+'\t')
-                        file_stats.write('\n')
+    ########## OUTPUT FILES (from the first to the last image)###########
 
-            with open("OutputPlots/"+test_name+"_results_mm_dx_"+str(initial_start_index)+"_"+str(stop_index)+".txt","w") as file_stats:
-                        for i in xrange(np.shape(dx)[0]):
-                            for j in xrange(np.shape(dx)[1]):
-                               file_stats.write(str(dx[i,j])+'\t')
-                            file_stats.write('\n')
-
-    ########## OUTPUT FILES ###########
-
-    with open("OutputPlots/"+test_name+"_results_mm_"+str(initial_start_index)+"_"+str(stop_index)+".txt","w") as file_stats:
-        for k in xrange(len(results_mm)):
-            file_stats.write(str(results_mm[k,0])+'\t'+str(results_mm[k,1])+'\t'+str(results_mm[k,2])+'\t'+str(results_mm[k,3])+'\t'+str(results_mm[k,4])+'\t'+str(results_mm[k,5])+'\n')
-
-    with open("OutputPlots/"+test_name+"_results_mm_Gx"+str(initial_start_index)+"_"+str(stop_index)+".txt","w") as file_stats:
-        for i in xrange(np.shape(Gx)[0]):
-            for j in xrange(np.shape(Gx)[1]):
-                file_stats.write(str(Gx[i,j])+'\n')
-
-    with open("OutputPlots/"+test_name+"_results_mm_Gy"+str(initial_start_index)+"_"+str(stop_index)+".txt","w") as file_stats:
-        for i in xrange(np.shape(Gy)[0]):
-            for j in xrange(np.shape(Gy)[1]):
-                file_stats.write(str(Gy[i,j])+'\t')
-            file_stats.write('\n')
-
-    with open("OutputPlots/"+test_name+"_results_mm_dy"+str(initial_start_index)+"_"+str(stop_index)+".txt","w") as file_stats:
-        for i in xrange(np.shape(dy)[0]):
-            for j in xrange(np.shape(dy)[1]):
-                file_stats.write(str(dy[i,j])+'\t')
-            file_stats.write('\n')
-
-    with open("OutputPlots/"+test_name+"_results_mm_dx"+str(initial_start_index)+"_"+str(stop_index)+".txt","w") as file_stats:
-        for i in xrange(np.shape(dx)[0]):
-            for j in xrange(np.shape(dx)[1]):
-                file_stats.write(str(dx[i,j])+'\t')
-            file_stats.write('\n')
+    np.savetxt("OutputPlots/"+test_name+"_results_mm_"+str(initial_start_index)+"_"+str(stop_index)+".txt", results_mm, fmt = '%.7f')
+    np.savetxt("OutputPlots/"+test_name+"_results_mm_dx"+str(initial_start_index)+"_"+str(stop_index)+".txt", dx, fmt = '%.5f')
+    np.savetxt("OutputPlots/"+test_name+"_results_mm_dy"+str(initial_start_index)+"_"+str(stop_index)+".txt", dy, fmt = '%.5f')
+    np.savetxt("OutputPlots/"+test_name+"_results_mm_Gx"+str(initial_start_index)+"_"+str(stop_index)+".txt", Gx, fmt = '%.7f')
+    np.savetxt("OutputPlots/"+test_name+"_results_mm_Gy"+str(initial_start_index)+"_"+str(stop_index)+".txt", Gy, fmt = '%.7f')
 
     ########### SECTION PLOT ########### 
 
@@ -473,8 +435,6 @@ def DIC(images_absolute_path,format, vel, dim_pixel, frame_rate, start_index, le
     plt.savefig("OutputPlots/"+test_name+"_sezione_img_" + str(initial_start_index)+"_img_"+str(stop_index)+".png")
     plt.show()
     return msg
-
-
 
 
 ########### GIF FUNCTION ###########
