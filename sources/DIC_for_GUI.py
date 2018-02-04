@@ -35,7 +35,6 @@ import matplotlib.colors as mcolors
 import matplotlib.colorbar as mcolorbar
 from scipy import signal as sg
 import os
-import prova_mask1 as c
 from PyQt5.QtCore import pyqtRemoveInputHook
 import pdb
 

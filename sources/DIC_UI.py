@@ -33,9 +33,8 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 import DIC_for_GUI as DIC_roby
 from matplotlib import pyplot as plt
-import subprocess
-import prova_mask1 as c
 import pdb
+import numpy as np
 
 path = os.path.dirname(os.path.abspath(__file__))+'/'
 
@@ -52,11 +51,131 @@ results_directory = 'GIFfrec'
 if not os.path.exists(path+'\\'+results_directory):
     os.makedirs(path+'\\'+results_directory)
 
-class Form(QDialog):
+window_width = 500
+window_height = 900
+
+rectangley1 = None
+rectangley2 = None 
+rectanglex1 = None
+rectanglex2 = None
+absolute_path_of_images = None
+
+
+class ImageDrawPanel(QGraphicsPixmapItem):
+
+    def __init__(self, pixmap=None, parent=None, scene=None, width_scale_ratio=1, height_scale_ratio=1):
+        super(ImageDrawPanel, self).__init__()
+        self.cont = 0
+        self.x, self.y = -1, -1
+        self.radius = 10
+
+        self.pen = QPen(Qt.SolidLine)
+        self.pen.setColor(Qt.black)
+        self.pen.setWidth(2)
+
+        self.brush = QBrush(Qt.yellow)
+        self.width_scale_ratio = width_scale_ratio
+        self.height_scale_ratio = height_scale_ratio
+
+        self.rect = np.zeros((2,2))
+
+    def paint(self, painter, option, widget=None):
+        global rectangley1
+        global rectangley2
+        global rectanglex1
+        global rectanglex2
+        rectangley1 = None
+        rectangley2 = None 
+        rectanglex1 = None
+        rectanglex2 = None
+        painter.drawPixmap(0, 0, self.pixmap())
+        painter.setPen(self.pen)
+        painter.setBrush(self.brush)
+
+        if self.x >= 0 and self.y >= 0  and self.x < window_width and self.y < window_height:
+            painter.drawEllipse(self.x-self.radius, self.y-self.radius, 2*self.radius, 2*self.radius)
+            print self.cont, self.x,  self.y
+            self.rect[self.cont, 0] = self.x
+            self.rect[self.cont, 1] = self.y
+           
+            self.x, self.y = -1, -1
+            self.cont = self.cont+1
+        if self.cont ==2:
+            print self.rect
+            painter.drawRect(self.rect[0, 0], self.rect[0, 1], self.rect[1, 0]-self.rect[0, 0], self.rect[1, 1]-self.rect[0, 1])
+            self.cont = 0 
+
+            rectangley1 = int(self.rect[0, 1]/self.height_scale_ratio)
+            rectangley2 = int(self.rect[1, 1]/self.height_scale_ratio)
+            rectanglex1 = int(self.rect[0, 0]/ self.width_scale_ratio)
+            rectanglex2 = int(self.rect[1, 0]/ self.width_scale_ratio)
+
+    def mousePressEvent (self, event):
+        print 'mouse pressed'
+        self.x=event.pos().x()
+        self.y=event.pos().y()
+        self.update()
+
+    def mouseMoveEvent (self, event):
+        print 'mouse moving'
+        self.x = event.pos().x()
+        self.y = event.pos().y()
+        self.update()
+
+class Second(QMainWindow):
+    def __init__(self, parent=None):
+        super(Second, self).__init__(parent)
+        
+        self.scene = QGraphicsScene()
+        self.scene.setSceneRect(0, 0, window_width, window_height)
+
+        pixmap=self.openImage() 
+        self.imagePanel = ImageDrawPanel(scene = self.scene)
+        self.imagePanel.setPixmap(pixmap)
+        self.scene.addItem(self.imagePanel)
+
+        original_width = pixmap.width()
+        original_height= pixmap.height()
+
+        self.width_scale_ratio = float(window_width) / original_width
+        self.height_scale_ratio= float(window_height) / original_height
+        print '**** py2DIC by Geodesy and Geomatics Division ****'
+        # issues with jpeg format at least on Windows (Pyqt4)
+        # solved adding the path to imageformats  app.addLibraryPath('/path/to/plugins/imageformats') 
+        print 'Image original width', original_width, '\nwidth ratio',self.width_scale_ratio
+        print 'Image original height', original_height,'\nheight ratio',self.height_scale_ratio
+
+        pixmap = pixmap.scaled(window_width, window_height)
+        self.imagePanel = ImageDrawPanel(scene = self.scene, width_scale_ratio=self.width_scale_ratio, height_scale_ratio=self.height_scale_ratio)
+        self.imagePanel.setPixmap(pixmap)
+        self.scene.addItem(self.imagePanel)
+
+        self.view = QGraphicsView(self.scene)
+
+        layout = QHBoxLayout()
+        layout.addWidget(self.view)
+
+        self.widget = QWidget()
+        self.widget.setLayout(layout)
+
+        self.setCentralWidget(self.widget)
+        self.setWindowTitle("Draw the Area of Interest (AOI)")
+
+    def openImage(self):
+        global absolute_path_of_images
+        fname = QFileDialog.getOpenFileName(self, "Open image", ".", "Image Files (*.bmp *.JPG *.png *.xpm)")
+        
+        absolute_path_of_images =  str(fname[0][:-1*len(os.path.basename(str(fname[0])))])
+
+        if len(absolute_path_of_images)==0:
+            return None
+        return QPixmap(fname[0])
+
+
+class First(QDialog):
 
     def __init__(self, parent=None):
-
-        super(Form, self).__init__(parent)
+        super(First, self).__init__(parent)
 
         global path
         self.setWindowTitle("py2DIC by AGG")
@@ -85,6 +204,7 @@ class Form(QDialog):
         pixmap = pixmap.scaled(445, 90)
         label_image.setPixmap(pixmap)
 
+        self.AOIbutton = QPushButton("Select AOI")
         self.l1 = QLabel(self.scrollAreaWidgetContents)
         self.l1.setText("Pixel dimension [mm]")
         self.le_pixel_dimension = QLineEdit(self.scrollAreaWidgetContents)
@@ -107,7 +227,7 @@ class Form(QDialog):
         self.l_prova.setText("Test path")
         self.le_prova = QLineEdit(self.scrollAreaWidgetContents)
         self.le_prova.setObjectName("prova")
-        self.le_prova.setText(c.absolute_path_of_images)
+        self.le_prova.setText(absolute_path_of_images)
 
         self.l2 = QLabel(self.scrollAreaWidgetContents)
         self.l2.setText("Imposed deformation velocity [mm/m]")
@@ -167,6 +287,7 @@ class Form(QDialog):
 
         # Adding all the widgets to the scroll layout container
         self.verticalLayoutScroll.addWidget(label_image)
+        self.verticalLayoutScroll.addWidget(self.AOIbutton)
         self.verticalLayoutScroll.addWidget(self.l_prova)
         self.verticalLayoutScroll.addWidget(self.le_prova)
         self.verticalLayoutScroll.addWidget(self.labformat)
@@ -196,10 +317,21 @@ class Form(QDialog):
         self.verticalLayoutScroll.addWidget(self.pb)
         self.verticalLayoutScroll.addWidget(self.display)
 
+        self.dialog = Second(self)
+        print 'images path', absolute_path_of_images
+        self.le_prova.setText(absolute_path_of_images)
+        self.AOIbutton.clicked.connect(self.on_pushButton_clicked)
+
         # Button clicked event 
         self.pb.clicked.connect(self.button_click)
 
-    # Button clicked event handler
+    def on_pushButton_clicked(self):
+        self.dialog.show()
+
+    def appExit(self):
+        app.quit()
+
+    # RUN Button clicked event handler
     def button_click(self):
         try:
             self.dim_pixel = float (self.le_pixel_dimension.text())
@@ -213,14 +345,9 @@ class Form(QDialog):
             d =int(self.le_b1.text())
             frame_rate = 1.0/ float(self.le_frame_rate.text()) 
             prova = str(self.le_prova.text())
-            recty1 = c.rectangley1
-            recty2 = c.rectangley2
-            rectx1 = c.rectanglex1
-            rectx2 = c.rectanglex2
 
             print "Selected parameters:"
             print self.dim_pixel, img_format, vel, start_index, levels, templateWidth, image_time_sampling, b, frame_rate
-            print 'ciao',recty1, recty2, rectx1, rectx2
             self.display.setText(    self.display.toPlainText() +
                                     "SELECTED PARAMETERS:"+
                                     "\nTest name = "+prova+
@@ -234,14 +361,13 @@ class Form(QDialog):
                                     '\nTemplate width = '+ str(templateWidth)+ ' pixel'+
                                     '\nSearch zone width = ' + str(b)+ ' pixel\n\n')
 
-
         except:
             print "Error: input must be numbers"
             self.display.setText(self.display.toPlainText()+"Errore: gli input devono essere un numero\n")
             return False
         try:  
                 
-            log_message = DIC_roby.DIC(prova,img_format, vel, self.dim_pixel, frame_rate, start_index, levels, image_time_sampling, templateWidth, b, d, recty1, recty2, rectx1, rectx2)
+            log_message = DIC_roby.DIC(prova,img_format, vel, self.dim_pixel, frame_rate, start_index, levels, image_time_sampling, templateWidth, b, d, rectangley1, rectangley2, rectanglex1, rectanglex2)
 
             if self.rdbUno.isChecked():
                 DIC_roby.gif(path+"GIF\\", "gif.GIF")
@@ -259,10 +385,9 @@ class Form(QDialog):
             raise
             return False
 
-app = QApplication(sys.argv)
-form = Form()
-
-form.show()
-form.resize(500,900)
-
-sys.exit(app.exec_())
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    main = First()
+    app.setActiveWindow(main)
+    main.show()
+    sys.exit(app.exec_())
