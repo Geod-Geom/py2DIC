@@ -109,22 +109,25 @@ def DIC(images_absolute_path,format, vel, dim_pixel, frame_rate, start_index, le
     # Read the first image to obtain information about the camera resolution 
     img1 = cv2.imread(img_names[0], 0)
 
-    crop_img1 = img1[recty1:recty2, rectx1:rectx2]
-    #img1r = img1.T.copy() # Return the transpose (otherwise the quiver image is horizontal but the images are vertical)
-    Dim_x = np.shape(crop_img1)[1] # width 
-    Dim_y = np.shape(crop_img1)[0] # height 
+    if recty1!= None and recty2!= None and rectx1!= None and rectx2!= None:
+        # otherwise the AOI is all the image
+        Dim_y = recty2-recty1 #img1r.shape[0]# sto supponenedo che tuttw le immagini abbiano la stessa shape
+        Dim_x = rectx2-rectx1#img1r.shape[1]
+        crop_img1 = img1[recty1:recty2, rectx1:rectx2]
+    else:
+        Dim_x = np.shape(img1)[1] # width 
+        Dim_y = np.shape(img1)[0] # height 
+
 
     # If statement to define width and height in ubuntu
     windows = False
     if Dim_x < Dim_y:
         print "Windows or MAC"
-        #Dim_x = np.shape(img1)[0] # width 
-        #Dim_y = np.shape(img1)[1] 
         windows =True
     else:
         print "UBUNTU"
         Dim_x = np.shape(crop_img1)[0] # width 
-        Dim_y = np.shape(crop_img1)[1]
+        Dim_y = np.shape(crop_img1)[1] # height
 
     print "Dim x:", Dim_x
     print "Dim y:", Dim_y
@@ -160,26 +163,23 @@ def DIC(images_absolute_path,format, vel, dim_pixel, frame_rate, start_index, le
             msg = msg + str(spost_atteso_mm) + ' mm '+ str(spost_atteso_pixel)+ ' pixel\n' 
 
             img1 = cv2.imread(img_names[start_index], 0)
-            crop_img1 = img1[recty1:recty2, rectx1:rectx2]
-            img2 = cv2.imread(img_names[stop_index], 0)
-            crop_img2 = img2[recty1:recty2, rectx1:rectx2]
+            img2 = cv2.imread(img_names[ stop_index], 0)
+
+            if recty1 == None:
+                crop_img1 = img1
+                crop_img2 = img2
+            else:
+                crop_img1 = img1[recty1:recty2, rectx1:rectx2]
+                crop_img2 = img2[recty1:recty2, rectx1:rectx2]
 
             # If statement to define width and height in ubuntu
-            if windows == True:
-                img1 = cv2.imread(img_names[start_index], 0)
-                crop_img1 = img1[recty1:recty2, rectx1:rectx2]
-                img2 = cv2.imread(img_names[stop_index], 0)
-                crop_img2 = img2[recty1:recty2, rectx1:rectx2]
-            else:
+            if windows == False:
+                # Ubuntu
                 cv2.flip(crop_img1, 0, crop_img1)
-                cv2.flip(crop_img2, 0, crop_img2)	
-
+                cv2.flip(crop_img2, 0, crop_img2)
                 crop_img1 = crop_img1.T.copy()
                 crop_img2 = crop_img2.T.copy()
 
-            '''cv2.namedWindow("a", cv2.WINDOW_NORMAL)
-            cv2.imshow("a", img1)
-            cv2.waitKey()'''	 
 
             print '-----------'
             print "Camera resolution"
@@ -282,7 +282,6 @@ def DIC(images_absolute_path,format, vel, dim_pixel, frame_rate, start_index, le
             fig = plt.figure("Displacements dx between img " + str(initial_start_index)+" and img "+str(stop_index))
             plt.title("$Horizontal\;displacements: u$")
             plt.gca().set_aspect('equal', adjustable='box')
-            #plt.imshow(dx, cmap=cm.jet )
             plt.imshow(dx, cmap=cm.jet, norm=mcolors.Normalize(vmin=soglia_inf_x, vmax=soglia_sup_mm_x), interpolation = 'None')
             cb=plt.colorbar() 
             cb.set_clim(soglia_inf_x, soglia_sup_mm_x)
@@ -412,12 +411,6 @@ def DIC(images_absolute_path,format, vel, dim_pixel, frame_rate, start_index, le
             plt.savefig("GIFfrec/"+test_name+"_freccette_img_" + str(initial_start_index)+"_img_"+str(stop_index)+".png")
             mng = plt.get_current_fig_manager()
             #mng.window.showMaximized()
-
-            #with open("OutputPlots/"+test_name+"_results_mm_dy"+str(initial_start_index)+"_"+str(stop_index)+".txt","w") as file_stats:
-                #for i in xrange(np.shape(dy)[0]):
-                    #for j in xrange(np.shape(dy)[1]):
-                            # file_stats.write(str(dy[i,j])+'\t')
-                    #file_stats.write('\n')
 
             with open("OutputPlots/"+test_name+"_results_mm_dy_"+str(initial_start_index)+"_"+str(stop_index)+".txt","w") as file_stats:
                         for i in xrange(np.shape(dy)[0]):
