@@ -121,8 +121,7 @@ def DIC(images_absolute_path,format, vel, dim_pixel, frame_rate, start_index, le
     else:
         Dim_x = np.shape(img1)[1] # width 
         Dim_y = np.shape(img1)[0] # height 
-
-
+    
     # If statement to define width and height in ubuntu
     windows = False
     if Dim_x < Dim_y:
@@ -293,6 +292,7 @@ def DIC(images_absolute_path,format, vel, dim_pixel, frame_rate, start_index, le
             soglia_sup_Gy   =   4/100.0
 
             ########### DISPLACEMENTS PLOT ########### 
+
             indici_inf = np.where(dy < soglia_inf_y) # Consider only positive dy
             ix = indici_inf [1] # x index
             iy = indici_inf [0] # y index
@@ -379,12 +379,12 @@ def DIC(images_absolute_path,format, vel, dim_pixel, frame_rate, start_index, le
 
             fig =  plt.figure("Gx between img " + str(initial_start_index)+" and img "+str(stop_index))
             plt.title("{\partial u \over \partial x}")
-            plt.imshow(Gx, cmap=cm.jet)
+            plt.imshow(Gx, cmap=cm.jet, interpolation = 'None')
             plt.colorbar()
 
             fig = plt.figure("Gy between img " + str(initial_start_index)+" and img "+str(stop_index))
             plt.title("{\partial v \over \partial y}")
-            plt.imshow(Gy, cmap=cm.jet)
+            plt.imshow(Gy, cmap=cm.jet, interpolation = 'None')
             plt.colorbar()
             plt.show()
 

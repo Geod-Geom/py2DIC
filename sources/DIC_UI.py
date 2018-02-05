@@ -40,16 +40,16 @@ path = os.path.dirname(os.path.abspath(__file__))+'/'
 
 # If not already present, create the directory to store the results
 results_directory = 'OutputPlots'
-if not os.path.exists(path+'\\'+results_directory):
-    os.makedirs(path+'\\'+results_directory)
+if not os.path.exists(path+'/'+results_directory):
+    os.makedirs(path+'/'+results_directory)
 
 results_directory = 'GIF'
-if not os.path.exists(path+'\\'+results_directory):
-    os.makedirs(path+'\\'+results_directory)
+if not os.path.exists(path+'/'+results_directory):
+    os.makedirs(path+'/'+results_directory)
 
 results_directory = 'GIFfrec'
-if not os.path.exists(path+'\\'+results_directory):
-    os.makedirs(path+'\\'+results_directory)
+if not os.path.exists(path+'/'+results_directory):
+    os.makedirs(path+'/'+results_directory)
 
 window_width = 500
 window_height = 900
@@ -195,7 +195,7 @@ class First(QDialog):
 
         # Setting all the widgets
         label_image = QLabel(self.scrollAreaWidgetContents)
-        pixmap = QPixmap(path+'..\\logo_sapienza.jpg')
+        pixmap = QPixmap(path+'../logo_sapienza.jpg')
 
         if pixmap.width() == 0:
             path = path[:-1]+'\\'
