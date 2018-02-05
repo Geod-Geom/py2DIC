@@ -80,6 +80,12 @@ def template_match(img_master, img_slave, method = 'cv2.TM_CCOEFF_NORMED', mlx =
 
 
 def DIC(images_absolute_path,format, vel, dim_pixel, frame_rate, start_index, levels, image_time_sampling , temp_dim, b, d, recty1, recty2, rectx1, rectx2, c =0):
+
+    #checking that the template dimension is odd (dispari)
+    # if not, we make it odd
+    if int(temp_dim) % 2 == 0:
+        temp_dim = temp_dim + 1
+
     plt.close("all")
     plt.switch_backend("Qt5Agg")
 
@@ -210,8 +216,8 @@ def DIC(images_absolute_path,format, vel, dim_pixel, frame_rate, start_index, le
                     Delta_X = i*(c+2*d+temp_dim)
                     Delta_Y = j*(c+2*b+temp_dim)
 
-                    TP_temp_x = Delta_X+c+d+(temp_dim)/2.0 # x start
-                    TP_temp_y = Delta_Y+c+b+(temp_dim)/2.0 # y start
+                    TP_temp_x = Delta_X+c+d+(temp_dim-1)/2.0 # x start
+                    TP_temp_y = Delta_Y+c+b+(temp_dim-1)/2.0 # y start
 
                     start_x_template_slice = c+d+Delta_X
                     stop_x_template_slice  = c+d+Delta_X+temp_dim
@@ -225,8 +231,8 @@ def DIC(images_absolute_path,format, vel, dim_pixel, frame_rate, start_index, le
                     assert np.allclose(shape_template[1], temp_dim)
                     assert np.allclose(stop_y_template_slice - start_y_template_slice, temp_dim)
                     assert np.allclose(stop_x_template_slice - start_x_template_slice, temp_dim)
-                    assert np.allclose(TP_temp_x, (start_x_template_slice+ stop_x_template_slice)/2.0)
-                    assert np.allclose(TP_temp_y, (start_y_template_slice+ stop_y_template_slice)/2.0)
+                    assert np.allclose(TP_temp_x, (start_x_template_slice+ stop_x_template_slice)//2.0)
+                    assert np.allclose(TP_temp_y, (start_y_template_slice+ stop_y_template_slice)//2.0)
 
                     start_x_search_slice = c + Delta_X
                     stop_x_search_slice  = c + Delta_X + 2*d + temp_dim
@@ -238,16 +244,16 @@ def DIC(images_absolute_path,format, vel, dim_pixel, frame_rate, start_index, le
                     # checking the search area dimensions
                     assert np.allclose((shape_search[0] - temp_dim) /2.0, b)
                     assert np.allclose((shape_search[1] - temp_dim) /2.0, d)
-                    assert np.allclose(TP_temp_x, (start_x_search_slice+ stop_x_search_slice)/2.0)
-                    assert np.allclose(TP_temp_y, (start_y_search_slice+ stop_y_search_slice)/2.0)
+                    assert np.allclose(TP_temp_x, (start_x_search_slice+ stop_x_search_slice)//2.0)
+                    assert np.allclose(TP_temp_y, (start_y_search_slice+ stop_y_search_slice)//2.0)
 
                     temp =        img1r [  start_y_template_slice : stop_y_template_slice , start_x_template_slice : stop_x_template_slice ]
                     search_area = img2r [  start_y_search_slice : stop_y_search_slice , start_x_search_slice : stop_x_search_slice ]
 
                     indx,indy, maxcc = template_match(temp.astype('uint8'), search_area.astype('uint8'), mlx = 20, mly =2, show = False)
 
-                    TP_search_x = Delta_X+c+indx    # end point x 
-                    TP_search_y = Delta_Y+c+indy    # end point y 
+                    TP_search_x = Delta_X+c+indx - 0.5   # end point x 
+                    TP_search_y = Delta_Y+c+indy - 0.5   # end point y 
 
                     # Store the results in an array 
                     results[k,0] = TP_temp_x        # start point x [pixel]
