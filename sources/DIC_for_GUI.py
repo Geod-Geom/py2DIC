@@ -327,7 +327,7 @@ def DIC(images_absolute_path,format, vel, dim_pixel, frame_rate, start_index, le
             fig = plt.figure("Displacements dy between img " + str(initial_start_index)+" and img "+str(stop_index)) 
             plt.title("$Vertical\;displacements: v$")
             plt.gca().set_aspect('equal', adjustable='box')
-            plt.imshow(dy, cmap=cm.jet, norm=mcolors.Normalize(vmin=soglia_inf_y, vmax=soglia_sup_mm_y))
+            plt.imshow(dy, cmap=cm.jet, norm=mcolors.Normalize(vmin=soglia_inf_y, vmax=soglia_sup_mm_y), interpolation = 'None')
             cb2=plt.colorbar() 
             cb2.set_clim(soglia_inf_y, soglia_sup_mm_y)
             cb2.set_label('$mm$')
