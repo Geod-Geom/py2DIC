@@ -60,13 +60,12 @@ def template_match(img_master, img_slave, method = 'cv2.TM_CCOEFF_NORMED', mlx =
     px = (top_left[0]+bottom_right[0])/(2.0*mlx)
     py = (top_left[1]+bottom_right[1])/(2.0*mly)
 
-    # Scale images for visualization
-    img_master_scaled = cv2.convertScaleAbs(img_master, alpha=(255.0/500))
-    img_slave_scaled = cv2.convertScaleAbs(img_slave, alpha=(255.0/500))
-
-    cv2.rectangle(img_slave_scaled,top_left, bottom_right, 255, 2*mlx) 
-
+    #Visualization of matching results
     if show == True:
+        # Scale images for visualization
+        img_master_scaled = cv2.convertScaleAbs(img_master, alpha=(255.0/500))
+        img_slave_scaled = cv2.convertScaleAbs(img_slave, alpha=(255.0/500))
+        cv2.rectangle(img_slave_scaled,top_left, bottom_right, 255, 2*mlx) 
         plt.figure(figsize=(20,10))
         plt.subplot(131),plt.imshow(res,cmap = 'gray')
         plt.title('Matching Result'), plt.xticks([]), plt.yticks([])
