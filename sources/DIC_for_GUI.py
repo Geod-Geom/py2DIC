@@ -80,6 +80,15 @@ def template_match(img_master, img_slave, method = 'cv2.TM_CCOEFF_NORMED', mlx =
 
 def DIC(images_absolute_path,format, vel, dim_pixel, frame_rate, start_index, levels, image_time_sampling , temp_dim, b, d, recty1, recty2, rectx1, rectx2, c =0):
 
+    ml_x = 10 
+    ml_y = 10
+    
+    # threshold values set for the Plate Hole DIC Challenge image collection
+    dx_thresh_inf = -1.35
+    dx_thresh_sup = 0
+    dy_thresh_inf = -12.4
+    dy_thresh_sup = -4.5
+
     #checking that the template dimension is odd (dispari)
     # if not, we make it odd
     if int(temp_dim) % 2 == 0:
@@ -114,22 +123,30 @@ def DIC(images_absolute_path,format, vel, dim_pixel, frame_rate, start_index, le
 
     if recty1!= None and recty2!= None and rectx1!= None and rectx2!= None:
         # otherwise the AOI is all the image
-        Dim_y = recty2-recty1 #img1r.shape[0]# sto supponenedo che tuttw le immagini abbiano la stessa shape
-        Dim_x = rectx2-rectx1#img1r.shape[1]
-        crop_img1 = img1[recty1:recty2, rectx1:rectx2]
+        print 'p2', rectx2, recty2
+        print 'p1', rectx1, recty1
+        Dim_y = recty2-recty1 
+        Dim_x = rectx2-rectx1 
+
     else:
         Dim_x = np.shape(img1)[1] # width 
         Dim_y = np.shape(img1)[0] # height 
-    
-    # If statement to define width and height in ubuntu
-    windows = False
-    if Dim_x < Dim_y:
-        print "Windows or MAC"
-        windows =True
-    else:
-        print "UBUNTU"
-        Dim_x = np.shape(crop_img1)[0] # width 
-        Dim_y = np.shape(crop_img1)[1] # height
+
+    if np.shape(img1)[1] > np.shape(img1)[0]:
+        # In this case the images have a horizontal layout
+        # The x axis corresponds to the image columns
+        # The y axis corresponds to the image rows
+        boh = d
+        d = b
+        b = boh
+        boh = ml_x
+        ml_x = ml_y
+        ml_y = boh
+        
+        dy_thresh_inf = -1.35
+        dy_thresh_sup = 0        
+        dx_thresh_inf    = 4.5#np.min(dx)#- 1.35
+        dx_thresh_sup = 12.4#np.max(dx)#0
 
     print "Dim x:", Dim_x
     print "Dim y:", Dim_y
@@ -137,7 +154,9 @@ def DIC(images_absolute_path,format, vel, dim_pixel, frame_rate, start_index, le
     # Dimensions of the matching grid
     h = np.int(Dim_y/(temp_dim+2*b+c))# rows
     w = np.int(Dim_x/(temp_dim+2*d+c))# columns
-    
+    print 'h grid rows', h
+    print 'w grid cols', w
+
     # Array where to store the results
     # we cumulate the displacements computed for each level
     results = np.zeros((h*w,6))
@@ -178,13 +197,6 @@ def DIC(images_absolute_path,format, vel, dim_pixel, frame_rate, start_index, le
                 crop_img1 = img1[recty1:recty2, rectx1:rectx2]
                 crop_img2 = img2[recty1:recty2, rectx1:rectx2]
 
-            # If statement to define width and height in ubuntu
-            if windows == False:
-                # Ubuntu
-                cv2.flip(crop_img1, 0, crop_img1)
-                cv2.flip(crop_img2, 0, crop_img2)
-                crop_img1 = crop_img1.T.copy()
-                crop_img2 = crop_img2.T.copy()
 
             print '-----------'
             print "Camera resolution"
@@ -248,7 +260,7 @@ def DIC(images_absolute_path,format, vel, dim_pixel, frame_rate, start_index, le
                     temp =        img1r [  start_y_template_slice : stop_y_template_slice , start_x_template_slice : stop_x_template_slice ]
                     search_area = img2r [  start_y_search_slice : stop_y_search_slice , start_x_search_slice : stop_x_search_slice ]
 
-                    indx,indy, maxcc = template_match(temp.astype('uint8'), search_area.astype('uint8'), mlx = 20, mly =2, show = False)
+                    indx,indy, maxcc = template_match(temp.astype('uint8'), search_area.astype('uint8'), mlx = ml_x, mly = ml_y, show = False)
 
                     TP_search_x = Delta_X+c+indx - 0.5   # end point x 
                     TP_search_y = Delta_Y+c+indy - 0.5   # end point y 
@@ -281,10 +293,10 @@ def DIC(images_absolute_path,format, vel, dim_pixel, frame_rate, start_index, le
 
             ####  PLOTS 
             # threshold values set for the Plate Hole DIC Challenge image collection
-            soglia_inf_y    = - 12.4
-            soglia_sup_mm_y = - 4.5#np.inf#levels*spost_atteso_pixel*dim_pixel*1.1
-            soglia_inf_x    = - 1.35
-            soglia_sup_mm_x =   0
+            soglia_inf_y    = dy_thresh_inf#np.min(dy)#-12.4
+            soglia_sup_mm_y = dy_thresh_sup#np.max(dy)#- 4.5#np.inf#levels*spost_atteso_pixel*dim_pixel*1.1
+            soglia_inf_x    = dx_thresh_inf#np.min(dx)#- 1.35
+            soglia_sup_mm_x = dx_thresh_sup#np.max(dx)#0
             soglia_inf_Gx   = - 4/100.0
             soglia_sup_Gx   =   4.5/100.0
             soglia_inf_Gy   = - 4/100.0

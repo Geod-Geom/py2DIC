@@ -51,9 +51,6 @@ results_directory = 'GIFfrec'
 if not os.path.exists(path+'/'+results_directory):
     os.makedirs(path+'/'+results_directory)
 
-window_width = 500
-window_height = 900
-
 rectangley1 = None
 rectangley2 = None 
 rectanglex1 = None
@@ -63,7 +60,7 @@ absolute_path_of_images = None
 
 class ImageDrawPanel(QGraphicsPixmapItem):
 
-    def __init__(self, pixmap=None, parent=None, scene=None, width_scale_ratio=1, height_scale_ratio=1):
+    def __init__(self, window_width = None, window_height =None, pixmap=None, parent=None, scene=None, width_scale_ratio=1, height_scale_ratio=1):
         super(ImageDrawPanel, self).__init__()
         self.cont = 0
         self.x, self.y = -1, -1
@@ -78,6 +75,8 @@ class ImageDrawPanel(QGraphicsPixmapItem):
         self.height_scale_ratio = height_scale_ratio
 
         self.rect = np.zeros((2,2))
+        self.window_width = window_width
+        self.window_height = window_height
 
     def paint(self, painter, option, widget=None):
         global rectangley1
@@ -92,12 +91,11 @@ class ImageDrawPanel(QGraphicsPixmapItem):
         painter.setPen(self.pen)
         painter.setBrush(self.brush)
 
-        if self.x >= 0 and self.y >= 0  and self.x < window_width and self.y < window_height:
+        if self.x >= 0 and self.y >= 0  and self.x < self.window_width and self.y < self.window_height:
             painter.drawEllipse(self.x-self.radius, self.y-self.radius, 2*self.radius, 2*self.radius)
             print self.cont, self.x,  self.y
             self.rect[self.cont, 0] = self.x
             self.rect[self.cont, 1] = self.y
-           
             self.x, self.y = -1, -1
             self.cont = self.cont+1
         if self.cont ==2:
@@ -111,13 +109,13 @@ class ImageDrawPanel(QGraphicsPixmapItem):
             rectanglex2 = int(self.rect[1, 0]/ self.width_scale_ratio)
 
     def mousePressEvent (self, event):
-        print 'mouse pressed'
+        #print 'mouse pressed'
         self.x=event.pos().x()
         self.y=event.pos().y()
         self.update()
 
     def mouseMoveEvent (self, event):
-        print 'mouse moving'
+        #print 'mouse moving'
         self.x = event.pos().x()
         self.y = event.pos().y()
         self.update()
@@ -125,19 +123,28 @@ class ImageDrawPanel(QGraphicsPixmapItem):
 class Second(QMainWindow):
     def __init__(self, parent=None):
         super(Second, self).__init__(parent)
-        
+
+        pixmap=self.openImage() 
+        original_width = pixmap.width()
+        original_height= pixmap.height()
+        if pixmap.height() >= pixmap.width():
+            #Images with vertical layout
+            window_width = 500
+            window_height = 900
+        else:
+            #Images with horizontal layout
+            window_width = 900
+            window_height = 500
+
+        print window_width, window_height
         self.scene = QGraphicsScene()
         self.scene.setSceneRect(0, 0, window_width, window_height)
 
-        pixmap=self.openImage() 
-        self.imagePanel = ImageDrawPanel(scene = self.scene)
+        self.imagePanel = ImageDrawPanel( scene = self.scene, window_width= window_width, window_height= window_height)
         self.imagePanel.setPixmap(pixmap)
         self.scene.addItem(self.imagePanel)
 
-        original_width = pixmap.width()
-        original_height= pixmap.height()
-
-        self.width_scale_ratio = float(window_width) / original_width
+        self.width_scale_ratio =  float(window_width) / original_width
         self.height_scale_ratio= float(window_height) / original_height
         print '**** py2DIC by Geodesy and Geomatics Division ****'
         # issues with jpeg format at least on Windows (Pyqt4)
@@ -146,7 +153,7 @@ class Second(QMainWindow):
         print 'Image original height', original_height,'\nheight ratio',self.height_scale_ratio
 
         pixmap = pixmap.scaled(window_width, window_height)
-        self.imagePanel = ImageDrawPanel(scene = self.scene, width_scale_ratio=self.width_scale_ratio, height_scale_ratio=self.height_scale_ratio)
+        self.imagePanel = ImageDrawPanel(scene = self.scene, window_width= window_width, window_height= window_height, width_scale_ratio=self.width_scale_ratio, height_scale_ratio=self.height_scale_ratio)
         self.imagePanel.setPixmap(pixmap)
         self.scene.addItem(self.imagePanel)
 
