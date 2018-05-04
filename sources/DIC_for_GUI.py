@@ -117,6 +117,7 @@ def DIC(images_absolute_path,format, vel, dim_pixel, frame_rate, start_index, le
     format = '.'+format
 
     img_names = glob.glob( images_absolute_path +"/*"+format)
+    img_names.sort()
 
     # Read the first image to obtain information about the camera resolution 
     img1 = cv2.imread(img_names[0], 0)
@@ -167,7 +168,7 @@ def DIC(images_absolute_path,format, vel, dim_pixel, frame_rate, start_index, le
             print stop_index, start_index, image_time_sampling, initial_start_index
 
             msg = ''
-            print "step", l
+            print "level", l+1
             msg = msg + '-----------'
             msg = msg +  "\nAnalysed images"
             msg = msg +  "\n1: "+ os.path.basename(str(img_names[start_index]))
