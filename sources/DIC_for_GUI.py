@@ -80,14 +80,18 @@ def template_match(img_master, img_slave, method = 'cv2.TM_CCOEFF_NORMED', mlx =
 
 def template_match_cv_OCL_transp_API(img_master, img_slave, method = 'cv2.TM_CCOEFF_NORMED', mlx = 1, mly = 1, show=True):    
     #https://www.learnopencv.com/opencv-transparent-api/
-    
+
     # width and height of resampled images
     w = img_master.shape[1] * mlx
     h = img_master.shape[0] * mly
 
-    # Apply image oversampling on UMat images (GPU) thanks to Open Computing Language (OpenCL)
-    img_master = cv2.UMat(cv2.resize(img_master,None,fx=mlx, fy=mly, interpolation = cv2.INTER_CUBIC))
-    img_slave  = cv2.UMat(cv2.resize(img_slave, None,fx=mlx, fy=mly, interpolation = cv2.INTER_CUBIC))
+    # Convert the input images in UMat images (GPU) thanks to Open Computing Language (OpenCL)
+    img_slave  =  cv2.UMat(img_slave)
+    img_master = cv2.UMat(img_master)
+
+    # Apply image oversampling 
+    img_master = cv2.resize(img_master,None,fx=mlx, fy=mly, interpolation = cv2.INTER_CUBIC)
+    img_slave  = cv2.resize(img_slave, None,fx=mlx, fy=mly, interpolation = cv2.INTER_CUBIC)
 
     res = cv2.matchTemplate(img_slave, img_master,eval(method))
 
@@ -128,10 +132,11 @@ def template_match_cv_OCL_transp_API(img_master, img_slave, method = 'cv2.TM_CCO
 
 
 def DIC(images_absolute_path,format, vel, dim_pixel, frame_rate, start_index, levels, image_time_sampling , temp_dim, b, d, recty1, recty2, rectx1, rectx2, c =0):
+
     start_time = time.time()
-    ml_x = 10 
+    ml_x = 10
     ml_y = 10
-    
+
     # threshold values set for the Plate Hole DIC Challenge image collection
     dx_thresh_inf = -1.35
     dx_thresh_sup = 0
@@ -311,7 +316,7 @@ def DIC(images_absolute_path,format, vel, dim_pixel, frame_rate, start_index, le
                     search_area = img2r [  start_y_search_slice : stop_y_search_slice , start_x_search_slice : stop_x_search_slice ]
 
                     indx,indy, maxcc = template_match(temp.astype('uint8'), search_area.astype('uint8'), mlx = ml_x, mly = ml_y, show = False)
-                    #indx,indy, maxcc = template_match_cv_OCL_transp_API(temp.astype('uint8'), search_area.astype('uint8'), mlx = ml_x, mly = ml_y, show = False)
+                    #indx,indy, maxcc = template_match_cv_OCL_transp_API(temp, search_area, mlx = ml_x, mly = ml_y, show = False)
 
                     TP_search_x = Delta_X+c+indx - 0.5   # end point x 
                     TP_search_y = Delta_Y+c+indy - 0.5   # end point y 
@@ -531,7 +536,7 @@ def DIC(images_absolute_path,format, vel, dim_pixel, frame_rate, start_index, le
     plt.ylabel('y displacements (mm)')
     plt.xlabel('y axis on the grid nodes (mm)')
     plt.savefig("OutputPlots/"+test_name+"_sezione_img_" + str(initial_start_index)+"_img_"+str(stop_index)+".png")
-    print "--- %s seconds ---" % (time.time() - start_time)
+    print "py2DIC execution time: %s s" % (time.time() - start_time)
     plt.show()
     return msg
 
