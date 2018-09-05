@@ -36,6 +36,7 @@ import matplotlib.colorbar as mcolorbar
 from scipy import signal as sg
 import os
 from PyQt5.QtCore import pyqtRemoveInputHook
+import time
 import pdb
 
 def template_match(img_master, img_slave, method = 'cv2.TM_CCOEFF_NORMED', mlx = 1, mly = 1, show=True):    
@@ -60,7 +61,7 @@ def template_match(img_master, img_slave, method = 'cv2.TM_CCOEFF_NORMED', mlx =
     px = (top_left[0]+bottom_right[0])/(2.0*mlx)
     py = (top_left[1]+bottom_right[1])/(2.0*mly)
 
-    #Visualization of matching results
+    # Visualization of matching results
     if show == True:
         # Scale images for visualization
         img_master_scaled = cv2.convertScaleAbs(img_master, alpha=(255.0/500))
@@ -77,9 +78,57 @@ def template_match(img_master, img_slave, method = 'cv2.TM_CCOEFF_NORMED', mlx =
     
     return px, py, max_val
 
+def template_match_cv_OCL_transp_API(img_master, img_slave, method = 'cv2.TM_CCOEFF_NORMED', mlx = 1, mly = 1, show=True):    
+    #https://www.learnopencv.com/opencv-transparent-api/
+    
+    # width and height of resampled images
+    w = img_master.shape[1] * mlx
+    h = img_master.shape[0] * mly
+
+    # Apply image oversampling on UMat images (GPU) thanks to Open Computing Language (OpenCL)
+    img_master = cv2.UMat(cv2.resize(img_master,None,fx=mlx, fy=mly, interpolation = cv2.INTER_CUBIC))
+    img_slave  = cv2.UMat(cv2.resize(img_slave, None,fx=mlx, fy=mly, interpolation = cv2.INTER_CUBIC))
+
+    res = cv2.matchTemplate(img_slave, img_master,eval(method))
+
+    min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
+    
+    # Control if the method is TM_SQDIFF or TM_SQDIFF_NORMED, take minimum value
+    if method in [cv2.TM_SQDIFF, cv2.TM_SQDIFF_NORMED]:
+        top_left = min_loc
+    else:
+        top_left = max_loc 
+    bottom_right = (top_left[0] + w, top_left[1] + h)
+
+    # Retrieve center coordinates
+    px = (top_left[0]+bottom_right[0])/(2.0*mlx)
+    py = (top_left[1]+bottom_right[1])/(2.0*mly)
+
+    # Visualization of matching results
+    if show == True:
+        # Scale images for visualization
+        img_master_scaled = cv2.convertScaleAbs(img_master, alpha=(255.0/500))
+        img_slave_scaled = cv2.convertScaleAbs(img_slave, alpha=(255.0/500))
+        cv2.rectangle(img_slave_scaled,top_left, bottom_right, 255, 2*mlx) 
+
+        # convert back from Umat (GPU) to numpy array for matplotlib
+        img_master_scaled = cv2.UMat.get(img_master_scaled)
+        img_slave_scaled = cv2.UMat.get(img_slave_scaled)
+
+        plt.figure(figsize=(20,10))
+        plt.subplot(131),plt.imshow(res,cmap = 'gray')
+        plt.title('Matching Result'), plt.xticks([]), plt.yticks([])
+        plt.subplot(132),plt.imshow(img_master_scaled,cmap = 'gray')
+        plt.title('Detected Point'), plt.xticks([]), plt.yticks([])
+        plt.subplot(133),plt.imshow(img_slave_scaled, cmap = 'gray')
+        plt.suptitle(method)
+        plt.show()
+    
+    return px, py, max_val
+
 
 def DIC(images_absolute_path,format, vel, dim_pixel, frame_rate, start_index, levels, image_time_sampling , temp_dim, b, d, recty1, recty2, rectx1, rectx2, c =0):
-
+    start_time = time.time()
     ml_x = 10 
     ml_y = 10
     
@@ -262,6 +311,7 @@ def DIC(images_absolute_path,format, vel, dim_pixel, frame_rate, start_index, le
                     search_area = img2r [  start_y_search_slice : stop_y_search_slice , start_x_search_slice : stop_x_search_slice ]
 
                     indx,indy, maxcc = template_match(temp.astype('uint8'), search_area.astype('uint8'), mlx = ml_x, mly = ml_y, show = False)
+                    #indx,indy, maxcc = template_match_cv_OCL_transp_API(temp.astype('uint8'), search_area.astype('uint8'), mlx = ml_x, mly = ml_y, show = False)
 
                     TP_search_x = Delta_X+c+indx - 0.5   # end point x 
                     TP_search_y = Delta_Y+c+indy - 0.5   # end point y 
@@ -481,6 +531,7 @@ def DIC(images_absolute_path,format, vel, dim_pixel, frame_rate, start_index, le
     plt.ylabel('y displacements (mm)')
     plt.xlabel('y axis on the grid nodes (mm)')
     plt.savefig("OutputPlots/"+test_name+"_sezione_img_" + str(initial_start_index)+"_img_"+str(stop_index)+".png")
+    print "--- %s seconds ---" % (time.time() - start_time)
     plt.show()
     return msg
 
