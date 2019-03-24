@@ -322,13 +322,13 @@ def DIC(images_absolute_path,format, vel, dim_pixel, frame_rate, start_index, le
                     TP_search_x = Delta_X+c+indx - 0.5   # end point x 
                     TP_search_y = Delta_Y+c+indy - 0.5   # end point y 
 
-                    # Store the results in an array 
-                    results[k,0] = TP_temp_x        # start point x [pixel]
+                    # Store the results in an array: evaluate if this part  can be removed!
+                    '''results[k,0] = TP_temp_x        # start point x [pixel]
                     results[k,1] = TP_temp_y        # start point y [pixel]
                     results[k,2] = TP_search_x-TP_temp_x + results[k,2]  # dx [pixel]
                     results[k,3] = TP_search_y-TP_temp_y + results[k,3]  # dy [pixel]
                     results[k,4] = np.sqrt((results[k,3])**2 + (results[k,2] )**2)  # displ. modulo [pixel]
-                    results[k,5] = maxcc+results[k,5]
+                    results[k,5] = maxcc+results[k,5]'''
 
                     # Convert the pixel results into millimetres 
                     results_mm[k,0] = TP_temp_x     # start point x [pixel]
@@ -459,9 +459,7 @@ def DIC(images_absolute_path,format, vel, dim_pixel, frame_rate, start_index, le
 
             ########### QUIVER PLOT  ########### 
 
-            # Copy the result values in a new array 
-            results2 =  results_mm.copy()
-            print  np.max(results2[:,3]), np.min(results2[:,3])
+            print  np.max(results_mm[:,3]), np.min(results_mm[:,3])
 
             # Remove strains whose absolute value is greater than soglia_sup and lower than soglia_inf
             # limite_inf = np.where(results_mm2[:,3]<soglia_inf)[0]
@@ -469,12 +467,12 @@ def DIC(images_absolute_path,format, vel, dim_pixel, frame_rate, start_index, le
             # limite_sup = np.where(results_mm2[:,3]>soglia_sup_mm)[0]
             # results_mm2 = np.delete(results_mm2, limite_sup, axis=0)
 
-            print  np.nanmax(results2[:,3]), np.nanmin(results2[:,3]), np.nanmedian(results2[:,3]), np.nanmean(results2[:,3])
+            print  np.nanmax(results_mm[:,3]), np.nanmin(results_mm[:,3]), np.nanmedian(results_mm[:,3]), np.nanmean(results_mm[:,3])
 
             #http://stackoverflow.com/questions/11970186/matplotlib-quiver-and-imshow-superimposed-how-can-i-set-two-colorbars
             #http://stackoverflow.com/questions/23964856/plotting-streamlines-with-matplotlib-python
             nz = mcolors.Normalize()
-            nz.autoscale(results2[:,4]) 
+            nz.autoscale(results_mm[:,4]) 
             fig = plt.figure("img " + str(initial_start_index)+" - img "+str(stop_index))
             ax = fig.add_subplot(111)
             plt.imshow(crop_img1, cmap=plt.cm.gray, origin='upper')
@@ -487,21 +485,21 @@ def DIC(images_absolute_path,format, vel, dim_pixel, frame_rate, start_index, le
             plt.xlabel('pixels')
 
             # Plot quiver
-            plt.quiver( results2[:,0], #start x  [pixel]
-                        results2[:,1], #start y  [pixel]
-                        results2[:,2]/results2[:,4], #dx / |displ| [mm/mm]
-                        results2[:,3]/results2[:,4], #dy / |displ| [mm/mm]
+            plt.quiver( results_mm[:,0], #start x  [pixel]
+                        results_mm[:,1], #start y  [pixel]
+                        results_mm[:,2]/results_mm[:,4], #dx / |displ| [mm/mm]
+                        results_mm[:,3]/results_mm[:,4], #dy / |displ| [mm/mm]
                         angles='xy', 
                         scale=30,
-                        color=cm.jet(nz(results2[:,4])),
+                        color=cm.jet(nz(results_mm[:,4])),
                         edgecolor='k', # edge color of the quivers
                         linewidth=.2)
 
             # Colorbar
             cax,_ = mcolorbar.make_axes(plt.gca())
 
-            soglia_sup_prova_mm = np.nanmax(results2[:,4])
-            soglia_inf_prova_mm = np.nanmin(results2[:,4])
+            soglia_sup_prova_mm = np.nanmax(results_mm[:,4])
+            soglia_inf_prova_mm = np.nanmin(results_mm[:,4])
 
             # vmin and vmax should be symmetric? ex: - 6 ,6
             cb = mcolorbar.ColorbarBase(cax, cmap=cm.jet, norm=mcolors.Normalize(vmin= soglia_inf_prova_mm, vmax= soglia_sup_prova_mm))
