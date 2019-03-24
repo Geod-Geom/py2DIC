@@ -348,6 +348,33 @@ def DIC(images_absolute_path,format, vel, dim_pixel, frame_rate, start_index, le
             dx.shape = (h, w) # the computed displacements have the dimensions of the matching grid
             dy.shape = (h, w)
 
+            # Derivative kernel
+            operatore = np.matrix([-1.,0,1.])
+            print '-----------'
+            print "Used derivative kernel"
+            print "dx ", operatore
+            print "dy ", operatore.T
+            print '-----------'
+
+            msg = msg + '-----------\n'
+            msg = msg + "Used derivative kernel\n"
+            msg = msg + "dx "+ str(operatore)+ "\n"
+            msg = msg + "dy "+ str(operatore.T)
+            msg = msg + '\n-----------\n'
+
+            # Convolution for derivative computation
+            # Divide by the grid step
+            # The grid (dx-dy) comes from a bigger grid 
+            # http://docs.scipy.org/doc/scipy-0.16.1/reference/generated/scipy.signal.convolve.html
+            Gx = sg.convolve(dx, -operatore/[(2*(2*d+temp_dim+c))*dim_pixel],  mode='same')
+            Gy = sg.convolve(dy, -operatore.T/[(2*(2*b+temp_dim+c))*dim_pixel], mode='same')# Multiply by the pixel dimensions to have a millimeters value
+
+            # Printing the files for the single level, before adding the NaNs for visualization purposes
+            np.savetxt("OutputPlots/"+test_name+"_results_mm_dx_"+str(initial_start_index)+"_"+str(stop_index)+".txt", dx, fmt = '%.5f')
+            np.savetxt("OutputPlots/"+test_name+"_results_mm_dy_"+str(initial_start_index)+"_"+str(stop_index)+".txt", dy, fmt = '%.5f')
+            np.savetxt("OutputPlots/"+test_name+"_results_mm_Gy_"+str(initial_start_index)+"_"+str(stop_index)+".txt", Gy, fmt = '%.7f')
+            np.savetxt("OutputPlots/"+test_name+"_results_mm_Gx_"+str(initial_start_index)+"_"+str(stop_index)+".txt", Gx, fmt = '%.7f')
+
             ####  PLOTS 
             # threshold values set for the Plate Hole DIC Challenge image collection
             soglia_inf_y    = dy_thresh_inf#np.min(dy)#-12.4
@@ -360,7 +387,6 @@ def DIC(images_absolute_path,format, vel, dim_pixel, frame_rate, start_index, le
             soglia_sup_Gy   =   4/100.0
 
             ########### DISPLACEMENTS PLOT ########### 
-
             indici_inf = np.where(dy < soglia_inf_y) # Consider only positive dy
             ix = indici_inf [1] # x index
             iy = indici_inf [0] # y index
@@ -381,7 +407,6 @@ def DIC(images_absolute_path,format, vel, dim_pixel, frame_rate, start_index, le
             iy = indici_sup [0] # y index
             dx[ iy, ix ] = float('NaN')
 
-
             fig = plt.figure("Displacements dx between img " + str(initial_start_index)+" and img "+str(stop_index))
             plt.title("$Horizontal\;displacements: u$")
             plt.gca().set_aspect('equal', adjustable='box')
@@ -390,7 +415,6 @@ def DIC(images_absolute_path,format, vel, dim_pixel, frame_rate, start_index, le
             cb.set_clim(soglia_inf_x, soglia_sup_mm_x)
             cb.set_label('$mm$')
             plt.savefig("OutputPlots/"+test_name+"_displacements_dx_img_" + str(initial_start_index)+"_img_"+str(stop_index)+".png")	                
-
 
             fig = plt.figure("Displacements dy between img " + str(initial_start_index)+" and img "+str(stop_index)) 
             plt.title("$Vertical\;displacements: v$")
@@ -403,28 +427,7 @@ def DIC(images_absolute_path,format, vel, dim_pixel, frame_rate, start_index, le
             plt.savefig("OutputPlots/"+test_name+"_displacements_img_" + str(initial_start_index)+"_img_"+str(stop_index)+".png")
             plt.savefig("GIF/"+test_name+"_displacements_dy_img_" + str(initial_start_index)+"_img_"+str(stop_index)+".png")
 
-            operatore = np.matrix([-1.,0,1.])
-            print '-----------'
-            print "Used derivative kernel"
-            print "dx ", operatore
-            print "dy ", operatore.T
-            print '-----------'
-
-            msg = msg + '-----------\n'
-            msg = msg + "Used derivative kernel\n"
-            msg = msg + "dx "+ str(operatore)+ "\n"
-            msg = msg + "dy "+ str(operatore.T)
-            msg = msg + '\n-----------\n'
-
-            # Convolution 
-            # Divide by the grid step
-            # The grid (dx-dy) comes from a bigger grid 
-            # http://docs.scipy.org/doc/scipy-0.16.1/reference/generated/scipy.signal.convolve.html
-            Gx = sg.convolve(dx, -operatore/[(2*(2*d+temp_dim+c))*dim_pixel],  mode='same')
-            Gy = sg.convolve(dy, -operatore.T/[(2*(2*b+temp_dim+c))*dim_pixel], mode='same')# Multiply by the pixel dimensions to have a millimeters value
-
-            ########### STRAINS PLOT ###########
-
+            ########### STRAIN PLOT ###########
             # Remove the absolute value of strains greater than 4% 
             indici_sup_def = np.where(Gy > soglia_sup_Gy) 
             ix = indici_sup_def [1] # x index
@@ -458,7 +461,6 @@ def DIC(images_absolute_path,format, vel, dim_pixel, frame_rate, start_index, le
 
 
             ########### QUIVER PLOT  ########### 
-
             print  np.max(results_mm[:,3]), np.min(results_mm[:,3])
 
             # Remove strains whose absolute value is greater than soglia_sup and lower than soglia_inf
@@ -513,23 +515,7 @@ def DIC(images_absolute_path,format, vel, dim_pixel, frame_rate, start_index, le
             mng = plt.get_current_fig_manager()
             #mng.window.showMaximized()
 
-            # Printing the files for the single level
-            np.savetxt("OutputPlots/"+test_name+"_results_mm_dx_"+str(initial_start_index)+"_"+str(stop_index)+".txt", dx, fmt = '%.5f')
-            np.savetxt("OutputPlots/"+test_name+"_results_mm_dy_"+str(initial_start_index)+"_"+str(stop_index)+".txt", dy, fmt = '%.5f')
-            np.savetxt("OutputPlots/"+test_name+"_results_mm_Gy_"+str(initial_start_index)+"_"+str(stop_index)+".txt", Gy, fmt = '%.7f')
-            np.savetxt("OutputPlots/"+test_name+"_results_mm_Gx_"+str(initial_start_index)+"_"+str(stop_index)+".txt", Gx, fmt = '%.7f')
-
-
-    ########## OUTPUT FILES (from the first to the last image)###########
-
-    np.savetxt("OutputPlots/"+test_name+"_results_mm_"+str(initial_start_index)+"_"+str(stop_index)+".txt", results_mm, fmt = '%.7f')
-    np.savetxt("OutputPlots/"+test_name+"_results_mm_dx"+str(initial_start_index)+"_"+str(stop_index)+".txt", dx, fmt = '%.5f')
-    np.savetxt("OutputPlots/"+test_name+"_results_mm_dy"+str(initial_start_index)+"_"+str(stop_index)+".txt", dy, fmt = '%.5f')
-    np.savetxt("OutputPlots/"+test_name+"_results_mm_Gx"+str(initial_start_index)+"_"+str(stop_index)+".txt", Gx, fmt = '%.7f')
-    np.savetxt("OutputPlots/"+test_name+"_results_mm_Gy"+str(initial_start_index)+"_"+str(stop_index)+".txt", Gy, fmt = '%.7f')
-
     ########### SECTION PLOT ########### 
-
     plt.figure("Sample central section")
     plt.plot(dy[:,np.shape(dy)[1]/2])
     plt.ylabel('y displacements (mm)')
@@ -537,6 +523,7 @@ def DIC(images_absolute_path,format, vel, dim_pixel, frame_rate, start_index, le
     plt.savefig("OutputPlots/"+test_name+"_sezione_img_" + str(initial_start_index)+"_img_"+str(stop_index)+".png")
     print "py2DIC execution time: %s s" % (time.time() - start_time)
     plt.show()
+
     return msg
 
 
