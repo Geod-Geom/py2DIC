@@ -9,20 +9,21 @@
  The information in this file is
  Copyright(c) 2017, 
  Andrea Nascetti    <andrea.nascetti@uniroma1.it>,  
- Martina Di Rita    <martina.dirita@uniroma1.it>, 
- Roberta Ravanelli  <roberta.ravanelli@uniroma1.it>
- Valeria Belloni    <valeria.belloni@uniroma1.it>
+ Valeria Belloni    <valeria.belloni@uniroma1.it>,
+ Roberta Ravanelli  <roberta.ravanelli@uniroma1.it>,
+ Martina Di Rita    <martina.dirita@uniroma1.it> 
  and is subject to the terms and conditions of the
  GNU Lesser General Public License Version 2.1
  The license text is available from
  http://www.gnu.org/licenses/lgpl.html
  
- More information in the following scientific paper:
+ More information in the following scientific papers:
 
- Ravanelli Roberta, Nascetti Andrea, Di Rita Martina, Belloni Valeria, Mattei Domitilla, Nisticò Nicola, and Crespi Mattia: A new Digital
- Image Correlation software for displacements field measurement in structural applications, The International
- Archives of the Photogrammetry, Remote Sensing and Spatial Information Sciences, XLII-4/W2, 139-145,
- https://doi.org/10.5194/isprs-archives-XLII-4-W2-139-2017, 2017
+ Ravanelli R., Nascetti A., Di Rita M., Belloni V., Mattei D., Nisticò N., and Crespi M.: A new Digital Image Correlation software for displacements field measurement in structural applications, The International Archives of the Photogrammetry, Remote Sensing and Spatial Information Sciences, XLII-4/W2, 139-145,
+ https://doi.org/10.5194/isprs-archives-XLII-4-W2-139-2017, 2017.
+
+ Belloni V., Ravanelli, R., Nascetti, A., Di Rita, M., Mattei, D., and Crespi, M.: DIGITAL IMAGE CORRELATION FROM COMMERCIAL TO FOS SOFTWARE: A MATURE TECHNIQUE FOR FULL-FIELD DISPLACEMENT MEASUREMENTS,The International Archives of the Photogrammetry, Remote Sensing and Spatial Information Sciences, XLII-2, 91-95, 
+ https://doi.org/10.5194/isprs-archives-XLII-2-91-2018, 2018. 
 
 '''
 
