@@ -7,6 +7,12 @@ The software is based on the template matching method, a well-known technique fo
 cross-correlation, and returns the displacement and strain field by comparing 
 two or more images of the sample acquired at different stages of deformation.
 
+
+<p align="center">
+  <img width="460" height="300" src="https://github.com/Geod-Geom/py2DIC/blob/master/template_matching2.png">
+</p>
+
+
 # References
 
 V. Belloni, R. Ravanelli, A. Nascetti, M. Di Rita, D. Mattei, and M. Crespi.: **py2dic: A new free and open source software for displacement and strain measurements in the field of experimental mechanics**. Sensors, 19(18):3832, 2019.
