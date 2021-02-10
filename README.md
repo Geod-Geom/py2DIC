@@ -9,7 +9,7 @@ The software compares a series of images of a sample acquired at different stage
   <img width="460" height="300" src="https://github.com/Geod-Geom/py2DIC/blob/master/template_matching2.png">
 </p>
 
-At the and of the processing, py2DIC returns the displacement and strain field inside the AOI.
+At the and of the processing, py2DIC returns the displacement and strain fields inside the AOI.
 
 
 # References
