@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 '''
 
@@ -9,33 +10,34 @@
  The information in this file is
  Copyright(c) 2017, 
  Andrea Nascetti    <andrea.nascetti@uniroma1.it>,  
- Valeria Belloni    <valeria.belloni@uniroma1.it>,
- Roberta Ravanelli  <roberta.ravanelli@uniroma1.it>,
- Martina Di Rita    <martina.dirita@uniroma1.it> 
+ Martina Di Rita    <martina.dirita@uniroma1.it>, 
+ Roberta Ravanelli  <roberta.ravanelli@uniroma1.it>
+ Valeria Belloni    <valeria.belloni@uniroma1.it>
+ 
  and is subject to the terms and conditions of the
  GNU Lesser General Public License Version 2.1
  The license text is available from
  http://www.gnu.org/licenses/lgpl.html
  
- More information in the following scientific papers:
+ If you use this software, please cite the following scientific paper:
 
- Ravanelli R., Nascetti A., Di Rita M., Belloni V., Mattei D., Nisticò N., and Crespi M.: A new Digital Image Correlation software for displacements field measurement in structural applications, The International Archives of the Photogrammetry, Remote Sensing and Spatial Information Sciences, XLII-4/W2, 139-145,
- https://doi.org/10.5194/isprs-archives-XLII-4-W2-139-2017, 2017.
-
- Belloni V., Ravanelli, R., Nascetti, A., Di Rita, M., Mattei, D., and Crespi, M.: DIGITAL IMAGE CORRELATION FROM COMMERCIAL TO FOS SOFTWARE: A MATURE TECHNIQUE FOR FULL-FIELD DISPLACEMENT MEASUREMENTS,The International Archives of the Photogrammetry, Remote Sensing and Spatial Information Sciences, XLII-2, 91-95, 
- https://doi.org/10.5194/isprs-archives-XLII-2-91-2018, 2018.
-
+ R. Ravanelli, A. Nascetti, M. Di Rita, V. Belloni, D. Mattei, N. Nisticò, and M. Crespi. (2017),
+ A new Digital Image Correlation software for displacements field measurement in structural applications.
+ The International Archives of the Photogrammetry, Remote Sensing and Spatial Information Sciences, XLII-4/W2:139–145,
+ doi: 10.5194/ isprsarchives-XLII-4-W2-139-2017
+ 
 '''
-
+#http://pyqt.sourceforge.net/Docs/PyQt5/pyqt4_differences.html
 import sys
+#from PyQt5 import QtCore, QtGui, QtWidgets
+import numpy as np
 import os
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import *
+from PyQt5.QtGui import *# QBrush, QHBoxLayout,QFileDialog, QMainWindow, QGraphicsView, QGraphicsScene, QPen, QGraphicsPixmapItem, QWidget, QApplication, QPixmap
 from PyQt5.QtWidgets import *
 import DIC_for_GUI as DIC_roby
-from matplotlib import pyplot as plt
 import pdb
-import numpy as np
+from matplotlib import pyplot as plt
 
 path = os.path.dirname(os.path.abspath(__file__))+'/'
 
@@ -52,6 +54,10 @@ results_directory = 'GIFfrec'
 if not os.path.exists(path+'/'+results_directory):
     os.makedirs(path+'/'+results_directory)
 
+
+window_width = 500
+window_height = 900
+
 rectangley1 = None
 rectangley2 = None 
 rectanglex1 = None
@@ -60,8 +66,8 @@ absolute_path_of_images = None
 
 
 class ImageDrawPanel(QGraphicsPixmapItem):
-
-    def __init__(self, window_width = None, window_height =None, pixmap=None, parent=None, scene=None, width_scale_ratio=1, height_scale_ratio=1):
+    
+    def __init__(self, pixmap=None, parent=None, scene=None, width_scale_ratio=1, height_scale_ratio=1):
         super(ImageDrawPanel, self).__init__()
         self.cont = 0
         self.x, self.y = -1, -1
@@ -76,8 +82,6 @@ class ImageDrawPanel(QGraphicsPixmapItem):
         self.height_scale_ratio = height_scale_ratio
 
         self.rect = np.zeros((2,2))
-        self.window_width = window_width
-        self.window_height = window_height
 
     def paint(self, painter, option, widget=None):
         global rectangley1
@@ -92,15 +96,16 @@ class ImageDrawPanel(QGraphicsPixmapItem):
         painter.setPen(self.pen)
         painter.setBrush(self.brush)
 
-        if self.x >= 0 and self.y >= 0  and self.x < self.window_width and self.y < self.window_height:
+        if self.x >= 0 and self.y >= 0  and self.x < window_width and self.y < window_height:
             painter.drawEllipse(self.x-self.radius, self.y-self.radius, 2*self.radius, 2*self.radius)
-            print self.cont, self.x,  self.y
+            print (self.cont, self.x,  self.y)
             self.rect[self.cont, 0] = self.x
             self.rect[self.cont, 1] = self.y
+           
             self.x, self.y = -1, -1
             self.cont = self.cont+1
         if self.cont ==2:
-            print self.rect
+            print (self.rect)
             painter.drawRect(self.rect[0, 0], self.rect[0, 1], self.rect[1, 0]-self.rect[0, 0], self.rect[1, 1]-self.rect[0, 1])
             self.cont = 0 
 
@@ -110,13 +115,13 @@ class ImageDrawPanel(QGraphicsPixmapItem):
             rectanglex2 = int(self.rect[1, 0]/ self.width_scale_ratio)
 
     def mousePressEvent (self, event):
-        #print 'mouse pressed'
+        print ('mouse pressed')
         self.x=event.pos().x()
         self.y=event.pos().y()
         self.update()
 
     def mouseMoveEvent (self, event):
-        #print 'mouse moving'
+        print ('mouse moving')
         self.x = event.pos().x()
         self.y = event.pos().y()
         self.update()
@@ -124,37 +129,28 @@ class ImageDrawPanel(QGraphicsPixmapItem):
 class Second(QMainWindow):
     def __init__(self, parent=None):
         super(Second, self).__init__(parent)
-
-        pixmap=self.openImage() 
-        original_width = pixmap.width()
-        original_height= pixmap.height()
-        if pixmap.height() >= pixmap.width():
-            #Images with vertical layout
-            window_width = 500
-            window_height = 900
-        else:
-            #Images with horizontal layout
-            window_width = 900
-            window_height = 500
-
-        print window_width, window_height
+        
         self.scene = QGraphicsScene()
         self.scene.setSceneRect(0, 0, window_width, window_height)
 
-        self.imagePanel = ImageDrawPanel( scene = self.scene, window_width= window_width, window_height= window_height)
+        pixmap=self.openImage() 
+        self.imagePanel = ImageDrawPanel(scene = self.scene)
         self.imagePanel.setPixmap(pixmap)
         self.scene.addItem(self.imagePanel)
 
-        self.width_scale_ratio =  float(window_width) / original_width
+        original_width = pixmap.width()
+        original_height= pixmap.height()
+
+        self.width_scale_ratio = float(window_width) / original_width
         self.height_scale_ratio= float(window_height) / original_height
-        print '**** py2DIC by Geodesy and Geomatics Division ****'
-        # issues with jpeg format at least on Windows (Pyqt4)
+        print ('**** py2DIC by Geodesy and Geomatics Division ****')
+        # issues with jpeg format at least on Windows
         # solved adding the path to imageformats  app.addLibraryPath('/path/to/plugins/imageformats') 
-        print 'Image original width', original_width, '\nwidth ratio',self.width_scale_ratio
-        print 'Image original height', original_height,'\nheight ratio',self.height_scale_ratio
+        print ('Image original width', original_width, '\nwidth ratio',self.width_scale_ratio)
+        print ('Image original height', original_height,'\nheight ratio',self.height_scale_ratio)
 
         pixmap = pixmap.scaled(window_width, window_height)
-        self.imagePanel = ImageDrawPanel(scene = self.scene, window_width= window_width, window_height= window_height, width_scale_ratio=self.width_scale_ratio, height_scale_ratio=self.height_scale_ratio)
+        self.imagePanel = ImageDrawPanel(scene = self.scene, width_scale_ratio=self.width_scale_ratio, height_scale_ratio=self.height_scale_ratio)
         self.imagePanel.setPixmap(pixmap)
         self.scene.addItem(self.imagePanel)
 
@@ -171,27 +167,22 @@ class Second(QMainWindow):
 
     def openImage(self):
         global absolute_path_of_images
-        fname = QFileDialog.getOpenFileName(self, "Open image", ".", "Image Files (*.JPG *.png *TIF)")
+        fname = QFileDialog.getOpenFileName(self, "Open image", ".", "Image Files (*.bmp *.JPG *.png *.xpm *.TIF)")
+        #pdb.set_trace()
         absolute_path_of_images =  str(fname[0][:-1*len(os.path.basename(str(fname[0])))])
-        if len(absolute_path_of_images)==0:
+
+        if len(absolute_path_of_images)==0:#fname.isEmpty():
             return None
-        if fname[0][-3:]== 'TIF'or fname[0][-3:] == 'tif':
-            # Qt cannot read tiff images: in this case we will use opencv (it is a already a dependency) to read them
-            import cv2
-            tiff_img= cv2.imread(fname[0], 1)
-            imageQt = QImage(tiff_img, tiff_img.shape[1],tiff_img.shape[0], tiff_img.shape[1] * 3,QImage.Format_RGB888)
-            pxmap = QPixmap(imageQt)
-        else:
-            pxmap = QPixmap(fname[0])
-        return pxmap
+        return QPixmap(fname[0])#QPixmap(fname)
 
 
 class First(QDialog):
-
     def __init__(self, parent=None):
         super(First, self).__init__(parent)
-
+        
+        
         global path
+        #global absolute_path_of_images
         self.setWindowTitle("py2DIC by AGG")
 
         # Setting the scroll area
@@ -212,8 +203,8 @@ class First(QDialog):
         pixmap = QPixmap(path+'../logo_sapienza.jpg')
 
         if pixmap.width() == 0:
-            path = path[:-1]+'\\'
-            pixmap = QPixmap(path+'..\\logo_sapienza.jpg')
+            path = path[:-1]+'/'
+            pixmap = QPixmap(path+'../logo_sapienza.jpg')
 
         pixmap = pixmap.scaled(445, 90)
         label_image.setPixmap(pixmap)
@@ -235,7 +226,7 @@ class First(QDialog):
         self.labformat.setText("Image format (jpg, png...) - case sensitive -")
         self.lformat = QLineEdit(self.scrollAreaWidgetContents)
         self.lformat.setObjectName("Imformat")
-        self.lformat.setText("JPG")
+        self.lformat.setText("png")
 
         self.l_prova= QLabel(self.scrollAreaWidgetContents)
         self.l_prova.setText("Test path")
@@ -243,6 +234,8 @@ class First(QDialog):
         self.le_prova.setObjectName("prova")
         self.le_prova.setText(absolute_path_of_images)
 
+        #print 'images path', absolute_path_of_images
+        #print rectangley1, rectangley2, rectanglex1, rectanglex2
         self.l2 = QLabel(self.scrollAreaWidgetContents)
         self.l2.setText("Imposed deformation velocity [mm/m]")
         self.le2 = QLineEdit(self.scrollAreaWidgetContents)
@@ -253,19 +246,19 @@ class First(QDialog):
         self.lsi.setText("Start index")
         self.lesi = QLineEdit(self.scrollAreaWidgetContents)
         self.lesi.setObjectName("start_index")
-        self.lesi.setText("0")#1
+        self.lesi.setText("0")
 
         self.lstopi = QLabel(self.scrollAreaWidgetContents)
         self.lstopi.setText("Levels")
         self.lestopi = QLineEdit(self.scrollAreaWidgetContents)
         self.lestopi.setObjectName("levels")
-        self.lestopi.setText("1")#3
+        self.lestopi.setText("1")
 
         self.lsamp = QLabel(self.scrollAreaWidgetContents)
         self.lsamp.setText("Image time sampling")
         self.lesamp = QLineEdit(self.scrollAreaWidgetContents)
         self.lesamp.setObjectName("image_time_sampling")
-        self.lesamp.setText("1") #4       
+        self.lesamp.setText("1")        
 
         self.pb = QPushButton(self.scrollAreaWidgetContents)
         self.pb.setObjectName("Run")
@@ -275,19 +268,31 @@ class First(QDialog):
         self.l_tem_width.setText("Template width [pixel]")
         self.le_tem_width = QLineEdit(self.scrollAreaWidgetContents)
         self.le_tem_width.setObjectName("templateWidth")
-        self.le_tem_width.setText("9")
+        self.le_tem_width.setText("11")
 
         self.l_b = QLabel(self.scrollAreaWidgetContents)
         self.l_b.setText("Edge y [pixel]")
         self.le_b = QLineEdit(self.scrollAreaWidgetContents)
         self.le_b.setObjectName("bordoy")
-        self.le_b.setText("12")
+        self.le_b.setText("15")
 
         self.l_b1 = QLabel(self.scrollAreaWidgetContents)
         self.l_b1.setText("Edge x [pixel]")
         self.le_b1 = QLineEdit(self.scrollAreaWidgetContents)
         self.le_b1.setObjectName("bordox")
         self.le_b1.setText("2")
+        
+        self.l_H = QLabel(self.scrollAreaWidgetContents)
+        self.l_H.setText("Number of grids along x [-]")
+        self.le_H = QLineEdit(self.scrollAreaWidgetContents)
+        self.le_H.setObjectName("H")
+        self.le_H.setText("1")
+        
+        self.l_V = QLabel(self.scrollAreaWidgetContents)
+        self.l_V.setText("Number of grids along y [-]")
+        self.le_V = QLineEdit(self.scrollAreaWidgetContents)
+        self.le_V.setObjectName("V")
+        self.le_V.setText("1")
 
         self.display = QTextBrowser(self.scrollAreaWidgetContents)
         self.display.verticalScrollBar().setValue(0)
@@ -297,7 +302,7 @@ class First(QDialog):
         self.gif=QLabel(self.scrollAreaWidgetContents)
         self.gif.setText("GIF")
         self.rdbUno=QCheckBox("",self)
-        self.rdbUno.setChecked(False)
+        self.rdbUno.setChecked(True)
 
         # Adding all the widgets to the scroll layout container
         self.verticalLayoutScroll.addWidget(label_image)
@@ -324,6 +329,11 @@ class First(QDialog):
         self.verticalLayoutScroll.addWidget(self.le_b)
         self.verticalLayoutScroll.addWidget(self.l_b1)
         self.verticalLayoutScroll.addWidget(self.le_b1)
+        self.verticalLayoutScroll.addWidget(self.l_V)
+        self.verticalLayoutScroll.addWidget(self.le_V)
+        self.verticalLayoutScroll.addWidget(self.l_H)
+        self.verticalLayoutScroll.addWidget(self.le_H)
+
 
         #Widget radiobutton gif
         self.verticalLayoutScroll.addWidget(self.gif)
@@ -331,24 +341,33 @@ class First(QDialog):
         self.verticalLayoutScroll.addWidget(self.pb)
         self.verticalLayoutScroll.addWidget(self.display)
 
+
         self.dialog = Second(self)
-        print 'images path', absolute_path_of_images
+        print ('images path', absolute_path_of_images)
+        print (rectangley1, rectangley2, rectanglex1, rectanglex2)
         self.le_prova.setText(absolute_path_of_images)
         self.AOIbutton.clicked.connect(self.on_pushButton_clicked)
-
         # Button clicked event 
+        #self.connect(self.pb, SIGNAL("clicked()"),self.button_click)# qt4
         self.pb.clicked.connect(self.button_click)
 
     def on_pushButton_clicked(self):
         self.dialog.show()
 
     def appExit(self):
+        # Replace the next line with something that calls the QApplication's
+        #   exit() or quit() function.
+        #sys.exit()
         app.quit()
 
-    # RUN Button clicked event handler
+    # Button clicked event handler
     def button_click(self):
+        print (rectangley1, rectangley2, rectanglex1, rectanglex2)
+        #print self.dim_pixel, img_format, vel, start_index, levels, templateWidth, image_time_sampling, b, frame_rate
+        #pdb.set_trace()
         try:
             self.dim_pixel = float (self.le_pixel_dimension.text())
+            #pdb.set_trace()
             img_format = str( self.lformat.text())
             vel = float (self.le2.text())
             start_index = int(self.lesi.text())
@@ -356,12 +375,21 @@ class First(QDialog):
             image_time_sampling =  int (self.lesamp.text())
             templateWidth = int(self.le_tem_width.text()) 
             b = int(self.le_b.text())
-            d =int(self.le_b1.text())
+            d = int(self.le_b1.text())
+            H = int (self.le_H.text())
+            V = int (self.le_V.text())
+            #pdb.set_trace()
             frame_rate = 1.0/ float(self.le_frame_rate.text()) 
             prova = str(self.le_prova.text())
 
-            print "Selected parameters:"
-            print self.dim_pixel, img_format, vel, start_index, levels, templateWidth, image_time_sampling, b, frame_rate
+            #recty1 = rectangley1
+            #recty2 = rectangley2
+            #rectx1 = rectanglex1
+            #rectx2 = rectanglex2
+
+            print ("Selected parameters:")
+            print (self.dim_pixel, img_format, vel, start_index, levels, templateWidth, image_time_sampling, b, frame_rate)
+            print ('ciao',rectangley1, rectangley2, rectanglex1, rectanglex2)
             self.display.setText(    self.display.toPlainText() +
                                     "SELECTED PARAMETERS:"+
                                     "\nTest name = "+prova+
@@ -373,35 +401,42 @@ class First(QDialog):
                                     '\nLevels= '  + str(levels)+ 
                                     '\nImage time sampling=' + str(image_time_sampling)+
                                     '\nTemplate width = '+ str(templateWidth)+ ' pixel'+
-                                    '\nSearch zone width = ' + str(b)+ ' pixel\n\n')
+                                    '\nSearch zone width = ' + str(b)+ ' pixel'+
+                                    '\nNumber of grids along x = ' + str(H)+
+                                    '\nNumber of grids along y = ' + str(V)+ '\n\n'
+                                    )
 
-        except:
-            print "Error: input must be numbers"
+        except Exception as e:
+            print ("Error:", e)
             self.display.setText(self.display.toPlainText()+"Errore: gli input devono essere un numero\n")
             return False
         try:  
                 
-            log_message = DIC_roby.DIC(prova,img_format, vel, self.dim_pixel, frame_rate, start_index, levels, image_time_sampling, templateWidth, b, d, rectangley1, rectangley2, rectanglex1, rectanglex2)
+            log_message = DIC_roby.DIC(prova,img_format, vel, self.dim_pixel, frame_rate, start_index, levels, image_time_sampling, templateWidth, b, d, rectangley1, rectangley2, rectanglex1, rectanglex2, H, V)
 
             if self.rdbUno.isChecked():
-                DIC_roby.gif(path+"GIF\\", "gif.GIF")
+                DIC_roby.gif(path+"GIF/", "gif.GIF")
             else:
-                print 'no gif'
+                print ('no gif')
 
             self.display.setText(self.display.toPlainText()+ "RESULTS\n"+ log_message)
             plt.ioff()
             return True
         except:
-            print "Error during cross correlation computation"
+            print ("Error during cross correlation computation")
             self.display.setText(self.display.toPlainText()+"Error during cross correlation computation\n")
 
-            print "Unexpected error:", sys.exc_info()[0]
+            print ("Unexpected error:", sys.exc_info()[0])
             raise
             return False
 
+
 if __name__ == '__main__':
     app = QApplication(sys.argv)
+    #app.setQuitOnLastWindowClosed(True)
     main = First()
     app.setActiveWindow(main)
     main.show()
+    #main.resize(500,900)
+    
     sys.exit(app.exec_())
