@@ -31,12 +31,15 @@ If you use the datasets in your research, please cite:
 <p align="justify"> 
 If you use Py2DIC in your research, please cite the following papers:
 </p>
+
 <p align="justify"> 
 - *Belloni V., Ravanelli, R., Nascetti, A., Di Rita, M., Mattei, D., and Crespi, M.*: **py2dic: A new free and open source software for displacement and strain measurements in the field of experimental mechanics**. Sensors, 19(18):3832, https://doi.org/10.3390/s19183832, 2019
 </p>
+
 <p align="justify"> 
 - *Belloni V., Ravanelli, R., Nascetti, A., Di Rita, M., Mattei, D., and Crespi, M.*: **Digital Image Correlation from commercial to FOS software: a mature technique for full-field displacement measurements**, The International Archives of the Photogrammetry, Remote Sensing and Spatial Information Sciences, XLII-2, 91-95, https://doi.org/10.5194/isprs-archives-XLII-2-91-2018, 2018
 </p>
+
 <p align="justify"> 
 - *Ravanelli R., Nascetti A., Di Rita M., Belloni V., Mattei D., Nisticò N., and Crespi M.*: **A new Digital Image Correlation software for displacements field measurement in structural applications**, The International Archives of the Photogrammetry, Remote Sensing and Spatial Information Sciences, XLII-4/W2, 139-145, https://doi.org/10.5194/isprs-archives-XLII-4-W2-139-2017, 2017
 </p>
