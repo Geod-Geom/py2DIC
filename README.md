@@ -1,9 +1,9 @@
 # Py2DIC
 
 <p align="justify"> 
-*Py2DIC* is a free and open-source Python software for **2D Digital Image Correlation (DIC)** developed at the Geodesy and Geomatics Division of Sapienza University of Rome.
+<strong>Py2DIC<strong> is a free and open-source Python software for <strong>2D Digital Image Correlation (DIC)<strong> developed at the Geodesy and Geomatics Division of Sapienza University of Rome.
 
-The software compares a series of images of a planar surface collected at different stages of deformation by tracking the pixel movement inside the Area of Interest (AOI) using matching algorithms (template matching method). At the end of the processing, py2DIC returns the displacement and strain fields inside the AOI.
+The software compares a series of images of a planar surface collected at different stages of deformation by tracking the pixel movement inside the Area of Interest (AOI) using matching algorithms (template matching method). At the end of the processing, py2DIC returns the <strong>displacement<strong> and <strong>strain fields<strong> inside the AOI.
 <p>
 <p align="center">
   <img width="460" height="300" src="https://github.com/Geod-Geom/py2DIC/blob/master/template_matching2.png">
