@@ -3,18 +3,29 @@
 <p align="justify"> 
 Py2DIC is a free and open-source Python software for 2D Digital Image Correlation (DIC) developed at the Geodesy and Geomatics Division of Sapienza University of Rome.
 
-The software compares a series of images of a planar surface collected at different stages of deformation by tracking the pixel movement inside the Area of Interest (AOI) using matching algorithms (template matching method).
+The software compares a series of images of a planar surface collected at different stages of deformation by tracking the pixel movement inside the Area of Interest (AOI) using matching algorithms (template matching method). At the end of the processing, py2DIC returns the displacement and strain fields inside the AOI.
 <p>
 <p align="center">
   <img width="460" height="300" src="https://github.com/Geod-Geom/py2DIC/blob/master/template_matching2.png">
 </p>
 
-At the end of the processing, py2DIC returns the displacement and strain fields inside the AOI.
+## Datasets
 
+Datasets related to the project:
+
+- [Dataset 1](https://data.mendeley.com/datasets/dns97tfdjn/1)
+- [Dataset 2](https://data.mendeley.com/datasets/z3yc9z84tk/2)
+
+If you use the datasets in your research, please cite:
+- *Sjölander, Andreas; Belloni, Valeria; Peterson, Viktor; Ledin, Jonatan* (2023). **Experimental dataset to assess the structural performance of cracked reinforced concrete using Digital Image Correlation techniques with fixed and moving cameras**. In: Data in Brief, Volume 51, https://doi.org/10.1016/j.dib.2023.109703
+- *Sjölander, Andreas; Belloni, Valeria; Nascetti, Andrea* (2022), **Dataset to track concrete cracking using DIC with fixed and moving camera**, Mendeley Data, V1, doi: 10.17632/dns97tfdjn.1
+- *Sjölander, Andreas; Belloni, Valeria; Peterson, Viktor; Ledin, Jonatan* (2023), **Dataset to assess the structural performance of cracked reinforced concrete using FEM, DIC and CMfM**, Mendeley Data, V2, doi: 10.17632/z3yc9z84tk.2
 
 # References
 
 <p align="justify"> 
+If you use Py2DIC in your research, please cite the following papers:
+
 V. Belloni, R. Ravanelli, A. Nascetti, M. Di Rita, D. Mattei, and M. Crespi.: **py2dic: A new free and open source software for displacement and strain measurements in the field of experimental mechanics**. Sensors, 19(18):3832, https://doi.org/10.3390/s19183832, 2019.
 
 Belloni V., Ravanelli, R., Nascetti, A., Di Rita, M., Mattei, D., and Crespi, M.: **Digital Image Correlation from commercial to FOS software: a mature tecnique for full-field displacement measurements**, The International Archives of the Photogrammetry, Remote Sensing and Spatial Information Sciences, XLII-2, 91-95, 
@@ -25,4 +36,10 @@ https://doi.org/10.5194/isprs-archives-XLII-4-W2-139-2017, 2017.
 
 Presented at: FOSS4G PARIS, Marne-La-Vallée, France, 18-22 July 2017 and
               ISPRS TC II Mid-term Symposium “Towards Photogrammetry 2020”, Riva del Garda, Italy, 4–7 June 2018
+</p>
+
+## License
+
+<p align="justify">
+Code is released for non-commercial and research purposes only. For commercial purposes, please contact the authors.
 </p>
