@@ -16,22 +16,21 @@ Datasets related to DIC:
 - [Dataset 1](https://data.mendeley.com/datasets/dns97tfdjn/1)
 - [Dataset 2](https://data.mendeley.com/datasets/z3yc9z84tk/2)
 
+<p align="justify"> 
 If you use the datasets in your research, please cite:
 - *Sjölander, Andreas; Belloni, Valeria; Peterson, Viktor; Ledin, Jonatan* (2023). **Experimental dataset to assess the structural performance of cracked reinforced concrete using Digital Image Correlation techniques with fixed and moving cameras**. In: Data in Brief, Volume 51, https://doi.org/10.1016/j.dib.2023.109703
 - *Sjölander, Andreas; Belloni, Valeria; Nascetti, Andrea* (2022), **Dataset to track concrete cracking using DIC with fixed and moving camera**, Mendeley Data, V1, doi: 10.17632/dns97tfdjn.1
 - *Sjölander, Andreas; Belloni, Valeria; Peterson, Viktor; Ledin, Jonatan* (2023), **Dataset to assess the structural performance of cracked reinforced concrete using FEM, DIC and CMfM**, Mendeley Data, V2, doi: 10.17632/z3yc9z84tk.2
-
+<p>
+  
 ## References
 
 <p align="justify"> 
 If you use Py2DIC in your research, please cite the following papers:
-
-Belloni V., Ravanelli, R., Nascetti, A., Di Rita, M., Mattei, D., and Crespi, M.: **py2dic: A new free and open source software for displacement and strain measurements in the field of experimental mechanics**. Sensors, 19(18):3832, https://doi.org/10.3390/s19183832, 2019.
-
-Belloni V., Ravanelli, R., Nascetti, A., Di Rita, M., Mattei, D., and Crespi, M.: **Digital Image Correlation from commercial to FOS software: a mature technique for full-field displacement measurements**, The International Archives of the Photogrammetry, Remote Sensing and Spatial Information Sciences, XLII-2, 91-95, 
+- Belloni V., Ravanelli, R., Nascetti, A., Di Rita, M., Mattei, D., and Crespi, M.: **py2dic: A new free and open source software for displacement and strain measurements in the field of experimental mechanics**. Sensors, 19(18):3832, https://doi.org/10.3390/s19183832, 2019.
+- Belloni V., Ravanelli, R., Nascetti, A., Di Rita, M., Mattei, D., and Crespi, M.: **Digital Image Correlation from commercial to FOS software: a mature technique for full-field displacement measurements**, The International Archives of the Photogrammetry, Remote Sensing and Spatial Information Sciences, XLII-2, 91-95, 
 https://doi.org/10.5194/isprs-archives-XLII-2-91-2018, 2018. 
-
-Ravanelli R., Nascetti A., Di Rita M., Belloni V., Mattei D., Nisticò N., and Crespi M.: **A new Digital Image Correlation software for displacements field measurement in structural applications**, The International Archives of the Photogrammetry, Remote Sensing and Spatial Information Sciences, XLII-4/W2, 139-145,
+- Ravanelli R., Nascetti A., Di Rita M., Belloni V., Mattei D., Nisticò N., and Crespi M.: **A new Digital Image Correlation software for displacements field measurement in structural applications**, The International Archives of the Photogrammetry, Remote Sensing and Spatial Information Sciences, XLII-4/W2, 139-145,
 https://doi.org/10.5194/isprs-archives-XLII-4-W2-139-2017, 2017.
 </p>
 
