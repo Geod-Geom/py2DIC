@@ -9,6 +9,13 @@ The software compares a series of images of a planar surface collected at differ
   <img width="460" height="300" src="https://github.com/Geod-Geom/py2DIC/blob/master/template_matching2.png">
 </p>
 
+## Contents  
+
+- [Datasets](#datasets)
+- [Citations](#citations)   
+- [License](#license)   
+<a name="headers"/>
+
 ## Datasets
 
 Datasets related to DIC:
