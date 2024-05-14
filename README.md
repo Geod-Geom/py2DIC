@@ -12,7 +12,7 @@ The software compares a series of images of a planar surface collected at differ
 ## Contents  
 
 - [Datasets](#datasets)
-- [Citations](#citations)   
+- [References](#references)   
 - [License](#license)   
 
 ## Datasets
