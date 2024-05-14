@@ -17,7 +17,7 @@ The software compares a series of images of a planar surface collected at differ
 
 ## Datasets
 
-Datasets related to DIC:
+Our datasets related to DIC:
 
 - [Dataset 1](https://data.mendeley.com/datasets/dns97tfdjn/1)
 - [Dataset 2](https://data.mendeley.com/datasets/z3yc9z84tk/2)
