@@ -6,7 +6,7 @@
 
 <p align="justify"> 
 The software compares a series of images of a planar surface collected at different stages of deformation by tracking the pixel movement inside the Area of Interest (AOI) using matching algorithms (template matching method). 
-At the end of the processing, py2DIC returns the <strong>displacement</strong> and <strong>strain fields</strong> (Green Lagrangian strains) inside the AOI.
+At the end of the processing, py2DIC returns the <strong>displacement</strong> and <strong>strain fields</strong> (Green Lagrangian strains) inside the AOI. For strain computation the software applies smoothing techniques (Gaussian or Spline) to the displacement field to reduce the noise.
 </p>
 
 <p align="justify">   
