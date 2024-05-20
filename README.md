@@ -25,6 +25,8 @@ The software allows users to set the main input parameters for displacement and 
 
 ## Datasets
 
+For DIC challenge datasets refer to https://idics.org/challenge/.
+
 Our datasets related to DIC:
 
 - [Dataset 1](https://data.mendeley.com/datasets/dns97tfdjn/1)
