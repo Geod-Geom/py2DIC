@@ -25,7 +25,7 @@ The software allows users to set the main input parameters for displacement and 
 
 ## Datasets
 
-DIC challenge datasets from the Society for Experimental Mechanics (SEM) can be found at https://idics.org/challenge/.
+DIC datasets from the Society for Experimental Mechanics (SEM) can be found at https://idics.org/challenge/.
 
 Our DIC datasets are:
 
