@@ -54,7 +54,7 @@ If you use Py2DIC in your research, please cite the following papers:
 - *Ravanelli R., Nascetti A., Di Rita M., Belloni V., Mattei D., Nisticò N., and Crespi M.*: **A new Digital Image Correlation software for displacements field measurement in structural applications**, The International Archives of the Photogrammetry, Remote Sensing and Spatial Information Sciences, XLII-4/W2, 139-145, https://doi.org/10.5194/isprs-archives-XLII-4-W2-139-2017, 2017
 
 
-If you are interested in DIC applied to not-fixed cameras refer to:
+If you are interested in DIC applied to not-fixed cameras refer to the following paper and repository:
 
 - *Valeria Belloni and Andreas Sjölander and Roberta Ravanelli and Mattia Crespi and Andrea Nascetti* (2023). **Crack Monitoring from Motion (CMfM): Crack detection and measurement using cameras with non-fixed positions**. In: Automation in Construction, vol 156, https://doi.org/10.1016/j.autcon.2023.105072
   
