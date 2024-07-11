@@ -18,10 +18,14 @@ The software allows users to set the main input parameters for displacement and 
 </p>
 
 ## Contents  
-
+- [Installation and usage](#installation)
 - [Datasets](#datasets)
 - [References](#references)   
 - [License](#license)   
+
+## Installation and usage
+
+For installing and testing the software, please follow the instructions described in the manual. 
 
 ## Datasets
 
