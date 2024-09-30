@@ -1,4 +1,6 @@
-# Py2DIC
+# Py2DIC 
+
+## :book: Introduction
 
 <p align="justify"> 
 <strong>Py2DIC</strong> is a free and open-source Python software for <strong>2D Digital Image Correlation (DIC)</strong> developed at the Geodesy and Geomatics Division of Sapienza University of Rome.
@@ -15,19 +17,13 @@ The software allows users to set the main input parameters for displacement and 
 
 <p align="center">
   <img width="460" height="300" src="https://github.com/Geod-Geom/py2DIC/blob/master/template_matching2.png">
-</p>
+</p> 
 
-## Contents  
-- [Installation and usage](#installation)
-- [Datasets](#datasets)
-- [References](#references)   
-- [License](#license)   
-
-## Installation and usage
+## :wrench: Installation and usage 
 
 For installing and testing the software, please follow the instructions described in the manual. 
 
-## Datasets
+## :camera: Datasets
 
 DIC datasets from the Society for Experimental Mechanics (SEM) can be found at https://idics.org/challenge/.
 
@@ -46,7 +42,7 @@ If you use the datasets in your research, please cite:
 - *Sjölander, Andreas; Belloni, Valeria; Peterson, Viktor; Ledin, Jonatan* (2023), **Dataset to assess the structural performance of cracked reinforced concrete using FEM, DIC and CMfM**, Mendeley Data, V2, doi: 10.17632/z3yc9z84tk.2, https://data.mendeley.com/datasets/z3yc9z84tk/3
 <p>
   
-## References
+## :pushpin: References
 
 <p align="justify"> 
 If you use Py2DIC in your research, please cite the following papers:
