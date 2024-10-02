@@ -62,5 +62,5 @@ If you want to process images collected with not-fixed cameras refer to our nove
 ## License
 
 <p align="justify">
-Code is released for non-commercial and research purposes only. For commercial purposes, please contact the authors (valeria.belloni@uniroma1.it).
+Code is released for non-commercial and research purposes only. For commercial purposes, please contact the authors. To contribute or ask information contact valeria.belloni@uniroma1.it.
 </p>
