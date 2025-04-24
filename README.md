@@ -60,7 +60,7 @@ To process images collected with not-fixed cameras refer to our novel methodolog
 
 Additional work using Py2DIC and CMfM:
 
-- *Belloni, V., Deresse, N., Nascetti, A., and Verstrynge, E.* (2025).  **Crack monitoring of masonry walls with standard and enhanced Digital Image Correlation methods**, 6th Joint International Symposium on Deformation Monitoring (JISDM 2025), Karlsruhe, 7-9 April 2025, https://doi.org/10.5445/IR/1000180531
+- *Belloni, V., Deresse, N., Nascetti, A., and Verstrynge, E.* (2025):  **Crack monitoring of masonry walls with standard and enhanced Digital Image Correlation methods**, 6th Joint International Symposium on Deformation Monitoring (JISDM 2025), Karlsruhe, 7-9 April 2025, https://doi.org/10.5445/IR/1000180531
 </p>
 
 ## :email: License
