@@ -54,9 +54,13 @@ If you use Py2DIC in your research, please cite the following papers:
 
 To process images collected with not-fixed cameras refer to our novel methodology Crack Monitoring from Motion (CMfM). Check out the following paper and Github repository:
 
-- *Valeria Belloni and Andreas Sjölander and Roberta Ravanelli and Mattia Crespi and Andrea Nascetti* (2023). **Crack Monitoring from Motion (CMfM): Crack detection and measurement using cameras with non-fixed positions**. In: Automation in Construction, vol 156, https://doi.org/10.1016/j.autcon.2023.105072
+- *Belloni, V., Sjölander, A., Ravanelli, R., Crespi, M. and Nascetti, A.* (2023). **Crack Monitoring from Motion (CMfM): Crack detection and measurement using cameras with non-fixed positions**, Automation in Construction, vol 156, https://doi.org/10.1016/j.autcon.2023.105072
   
 - https://github.com/Geod-Geom/CMfM
+
+Additional work using Py2DIC and CMfM:
+
+- *Belloni, V., Deresse, N., Nascetti, A., and Verstrynge, E.* (2025).  **Crack monitoring of masonry walls with standard and enhanced Digital Image Correlation methods**, 6th Joint International Symposium on Deformation Monitoring (JISDM 2025), Karlsruhe, 7-9 April 2025, https://doi.org/10.5445/IR/1000180531
 </p>
 
 ## :email: License
