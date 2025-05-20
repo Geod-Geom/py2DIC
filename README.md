@@ -10,7 +10,7 @@ At the end of the processing, py2DIC returns the <strong>displacement</strong> a
 </p>
 
 <p align="justify">   
-The software allows users to set the main input parameters for displacement and strain computation such as template and search window dimensions (see Figure).
+The software allows users to set the main input parameters for displacement and strain computation, such as template and search window dimensions (see Figure).
 </p>
 
 <p align="center">
@@ -52,7 +52,7 @@ If you use Py2DIC in your research, please cite the following papers:
 - *Ravanelli R., Nascetti A., Di Rita M., Belloni V., Mattei D., Nisticò N., and Crespi M.* (2017): **A new Digital Image Correlation software for displacements field measurement in structural applications**, The International Archives of the Photogrammetry, Remote Sensing and Spatial Information Sciences, XLII-4/W2, 139-145, https://doi.org/10.5194/isprs-archives-XLII-4-W2-139-2017
 
 
-To process images collected with not-fixed cameras refer to our novel methodology Crack Monitoring from Motion (CMfM). Check out the following paper and Github repository:
+Refer to our novel Crack Monitoring from Motion (CMfM) methodology to process images collected with non-fixed cameras. Check out the following paper and Github repository:
 
 - *Belloni, V., Sjölander, A., Ravanelli, R., Crespi, M. and Nascetti, A.* (2023): **Crack Monitoring from Motion (CMfM): Crack detection and measurement using cameras with non-fixed positions**, Automation in Construction, vol 156, https://doi.org/10.1016/j.autcon.2023.105072
   
