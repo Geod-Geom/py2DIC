@@ -72,5 +72,5 @@ Code is released for non-commercial and research purposes only. For commercial p
 ## :question: Contact info
 
 <p align="justify">
-To contribute or request information, please contact *valeria.belloni@uniroma1.it*.
+To contribute or request information, please contact valeria.belloni@uniroma1.it.
 </p>
