@@ -19,7 +19,7 @@ The software allows users to set the main input parameters for displacement and 
 
 ## :wrench: Installation and usage 
 
-To install and test the software, please follow the instructions in the manual. 
+To install and test the software, please follow the instructions in the manual https://github.com/Geod-Geom/py2DIC/blob/master/Py2DIC_manual.pdf. 
 
 ## :camera: Datasets
 
