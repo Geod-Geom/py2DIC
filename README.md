@@ -45,11 +45,11 @@ If you use the datasets in your research, please cite:
 <p align="justify"> 
 If you use Py2DIC in your research, please cite the following papers:
 
-- *Belloni V., Ravanelli, R., Nascetti, A., Di Rita, M., Mattei, D., and Crespi, M.* (2019): **py2dic: A new free and open source software for displacement and strain measurements in the field of experimental mechanics**. Sensors, 19(18):3832, https://doi.org/10.3390/s19183832
+- *Belloni, V., Ravanelli, R., Nascetti, A., Di Rita, M., Mattei, D., and Crespi, M.* (2019): **py2dic: A new free and open source software for displacement and strain measurements in the field of experimental mechanics**. Sensors, 19(18):3832, https://doi.org/10.3390/s19183832
 
-- *Belloni V., Ravanelli, R., Nascetti, A., Di Rita, M., Mattei, D., and Crespi, M.* (2018): **Digital Image Correlation from commercial to FOS software: a mature technique for full-field displacement measurements**, The International Archives of the Photogrammetry, Remote Sensing and Spatial Information Sciences, XLII-2, 91-95, https://doi.org/10.5194/isprs-archives-XLII-2-91-2018
+- *Belloni, V., Ravanelli, R., Nascetti, A., Di Rita, M., Mattei, D., and Crespi, M.* (2018): **Digital Image Correlation from commercial to FOS software: a mature technique for full-field displacement measurements**, The International Archives of the Photogrammetry, Remote Sensing and Spatial Information Sciences, XLII-2, 91-95, https://doi.org/10.5194/isprs-archives-XLII-2-91-2018
 
-- *Ravanelli R., Nascetti A., Di Rita M., Belloni V., Mattei D., Nisticò N., and Crespi M.* (2017): **A new Digital Image Correlation software for displacements field measurement in structural applications**, The International Archives of the Photogrammetry, Remote Sensing and Spatial Information Sciences, XLII-4/W2, 139-145, https://doi.org/10.5194/isprs-archives-XLII-4-W2-139-2017
+- *Ravanelli, R., Nascetti A., Di Rita, M., Belloni, V., Mattei, D., Nisticò, N., and Crespi, M.* (2017): **A new Digital Image Correlation software for displacements field measurement in structural applications**, The International Archives of the Photogrammetry, Remote Sensing and Spatial Information Sciences, XLII-4/W2, 139-145, https://doi.org/10.5194/isprs-archives-XLII-4-W2-139-2017
 
 
 Refer to our novel Crack Monitoring from Motion (CMfM) methodology to process images collected with non-fixed cameras. Check out the following paper and Github repository:
