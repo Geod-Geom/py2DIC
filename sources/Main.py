@@ -31,6 +31,8 @@ import glob
 import matplotlib.cm as cm
 import matplotlib.colors as mcolors
 import matplotlib.colorbar as mcolorbar
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.figure import Figure
 from scipy import signal as sg
 import os
 from PyQt5.QtCore import pyqtRemoveInputHook
@@ -41,7 +43,6 @@ import multiprocessing
 from scipy.ndimage import gaussian_filter
 from astropy.convolution import convolve
 from astropy.convolution import Gaussian2DKernel
-#import matplotlib.ticker as ticker
 
 
 def unwrap_self(arg, **kwarg):
@@ -257,8 +258,7 @@ class matching_class:
         self.ml = ml
         
     def run(self, num):
-        #output = []#backend="threading"o multiprocess?
-        # sommo sulf.results perche' potrei avrere i risultati del precedente livello temporale
+
         self.results[num] +=  Parallel(n_jobs= self.number_of_processors, backend="threading")\
             (delayed(unwrap_self)(i) for i in zip([self]*len(num), num))
 
@@ -311,11 +311,6 @@ class matching_class:
                     # in teoria dovrei fare un controllo anche sugli start e stop del template e del search, ma tanto stanno cmq piu a sinstra e piu' sopra dello stop del template
                     # if (stop_y_search_slice>=Dim_y) or (stop_x_search_slice>=Dim_x):
                     if (self.c + Delta_Y + 2*self.b +self.temp_dim + m >=self.Dim_y) or (self.c + Delta_X + 2*self.d + self.temp_dim + n >=self.Dim_x):
-                        # mi devo fermare altrimenti vado fuori dai bordi esterni dell'immaginepass
-                        '''output[k,0] = float('NaN')
-                        output[k,1] = float('NaN')
-                        output[k,2] = float('NaN')
-                        output[k,3] = float('NaN')'''
                         return np.array(['NaN','NaN','NaN','NaN','NaN','NaN'])
                         
                     else:
@@ -465,24 +460,6 @@ def DIC(images_absolute_path, dim_pixel, start_index, levels, image_time_samplin
                 strain_xy2 = .5*(du_dy + dv_dx + du_dx*du_dy + dv_dx*dv_dy)
                 strain_yy2 = dv_dy + .5*(np.power(dv_dy,2) + np.power(du_dy,2))
 
-                plt.figure('strain_yy2')
-                plt.imshow(strain_yy2, cmap=cm.jet)#, cmap=cm.jet, norm=mcolors.Normalize(vmin=0.002, vmax=0.012), interpolation = 'None')
-                plt.axis('off')
-                cb=plt.colorbar()
-                plt.gca().set_aspect('equal', adjustable='box')
-
-                plt.figure('strain_xx2')
-                plt.imshow(strain_xx2, cmap=cm.jet)#, cmap=cm.jet, norm=mcolors.Normalize(vmin=-0.015, vmax=0.00), interpolation = 'None')
-                plt.axis('off')
-                cb=plt.colorbar()
-                plt.gca().set_aspect('equal', adjustable='box')
-
-                plt.figure('strain_xy2')
-                plt.imshow(strain_xy2, cmap=cm.jet)#, cmap=cm.jet, norm=mcolors.Normalize(vmin=-0.005, vmax=0.005), interpolation = 'None')
-                plt.axis('off')
-                cb=plt.colorbar()
-                plt.gca().set_aspect('equal', adjustable='box')
-
 
             with open("OutputPlots/"+test_name+"_results_mm_dy_"+str(initial_start_index)+"_"+str(stop_index)+".txt","w") as file_stats:
                         for i in range(np.shape(dy)[0]):
@@ -494,30 +471,7 @@ def DIC(images_absolute_path, dim_pixel, start_index, levels, image_time_samplin
                         for i in range(np.shape(dx)[0]):
                             for j in range(np.shape(dx)[1]):
                                file_stats.write(str(dx[i,j])+'\t')
-                            file_stats.write('\n')
-
-            fig = plt.figure("Displacements smoothed dx between img " + str(initial_start_index)+" and img "+str(stop_index))
-            plt.title("Smoothed horizontal displacements: u")
-            plt.gca().set_aspect('equal', adjustable='box')
-            plt.imshow(crop_img1[int((temp_dim-1)/2+b)::, int((temp_dim-1)/2+d)::], cmap=plt.cm.gray, origin='upper')
-            plt.imshow(dispx_smoothed, cmap=cm.jet, alpha = 0.5)#, norm=mcolors.Normalize(vmin=soglia_inf_x, vmax=soglia_sup_x), interpolation = 'None')
-
-            cb=plt.colorbar()
-            if dim_pixel == 1: 
-                cb.set_label('px')
-            else:
-                cb.set_label('mm')                                
-
-            fig = plt.figure("Displacements smoothed dy between img " + str(initial_start_index)+" and img "+str(stop_index)) 
-            plt.title("Smoothed vertical displacements: v")
-            plt.gca().set_aspect('equal', adjustable='box')
-            plt.imshow(crop_img1[int((temp_dim-1)/2+b)::, int((temp_dim-1)/2+d)::], cmap=plt.cm.gray, origin='upper')
-            plt.imshow(dispy_smoothed, cmap=cm.jet, alpha = 0.5)#, norm=mcolors.Normalize(vmin=soglia_inf_y, vmax=soglia_sup_y), interpolation = 'None')
-            cb=plt.colorbar() 
-            if dim_pixel == 1: 
-                cb.set_label('px')
-            else:
-                cb.set_label('mm')  
+                            file_stats.write('\n')  
 
             ########### QUIVER PLOT  ###########  
             results2 =  results_mm.copy()
@@ -526,49 +480,21 @@ def DIC(images_absolute_path, dim_pixel, start_index, levels, image_time_samplin
             disp_U = results2[:,2]
             disp_V = results2[:,3]
 
-            #http://stackoverflow.com/questions/11970186/matplotlib-quiver-and-imshow-superimposed-how-can-i-set-two-colorbars
-            #http://stackoverflow.com/questions/23964856/plotting-streamlines-with-matplotlib-python
-            nz = mcolors.Normalize()
-            nz.autoscale(results2[:,4]) 
-            fig = plt.figure("img " + str(initial_start_index)+" - img "+str(stop_index))
-            ax = fig.add_subplot(111)
-            plt.imshow(crop_img1, cmap=plt.cm.gray, origin='upper')
-            plt.title("img " + str(initial_start_index)+" - img "+str(stop_index))
-            plt.gca().set_aspect('equal', adjustable='box') # Same scale on the x and y axes
-
-            plt.ylabel('pixels')
-            plt.xlabel('pixels')
-
-            # Plot quiver
-            plt.quiver((X[::100]/dim_pixel), (Y[::100]/dim_pixel), disp_U[::100]/mod[::100], disp_V[::100]/mod[::100], angles='xy', scale = 30, color=cm.jet(nz(mod[::100])))
-
-            cax,_ = mcolorbar.make_axes(plt.gca())
-
-            # soglia_sup_prova_mm = np.nanmax(results2[:,4])
-            # soglia_inf_prova_mm = np.nanmin(results2[:,4])
-
-            # # vmin and vmax should be symmetric? ex: - 6 ,6
-            #cb = mcolorbar.ColorbarBase(cax, cmap=cm.jet)#, norm=mcolors.Normalize(vmin= soglia_inf_prova_mm, vmax= soglia_sup_prova_mm))
-            #cb.set_clim(soglia_inf_prova_mm, soglia_sup_prova_mm)
-
-            cb = mcolorbar.ColorbarBase(cax, cmap=cm.jet, norm=nz)
-
-            ########### GRAFICO SEZIONE ########### 
-            plt.figure("Vertical central section")
-            plt.plot(dispy_smoothed[:, int(np.shape(dispy_smoothed)[1]/2)])
-
-            plt.xlabel('y position (px)')
-            if dim_pixel == 1: 
-                plt.ylabel('y displacements (px)')
-            else:
-                plt.ylabel('y displacements (mm)')
-
-    plt.show()
+    results_for_plot = {
+    'crop_img1': crop_img1,
+    'dispx_smoothed': dispx_smoothed,
+    'dispy_smoothed': dispy_smoothed,
+    'strain_xx2': strain_xx2 if defor else None,
+    'strain_yy2': strain_yy2 if defor else None,
+    'strain_xy2': strain_xy2 if defor else None,
+    'disp_U': disp_U,
+    'disp_V': disp_V,
+    }   
     
     stop = timeit.default_timer()
     print('Time [min]', (stop - start)/60) 
 
-    return msg
+    return msg, results_for_plot
 
 
 
