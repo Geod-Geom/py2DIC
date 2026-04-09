@@ -1,5 +1,10 @@
 # Py2DIC 
 
+📢 **News**
+ - 08/04/2026 We implemented a new Graphical User Interface (GUI), and we updated the manual. 
+
+**Introduction**
+
 <p align="justify"> 
 <strong>Py2DIC</strong> is a free and open-source Python software for <strong>2D Digital Image Correlation (DIC)</strong> developed at the Geodesy and Geomatics Division of Sapienza University of Rome.
 </p>
