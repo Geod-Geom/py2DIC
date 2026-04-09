@@ -150,11 +150,6 @@ class First(QDialog):
         self.pb = QPushButton("Run")
         self.display = QTextBrowser()
 
-        self.l_cb_min = QLabel("Colorbar min")
-        self.le_cb_min = QLineEdit("")
-        self.l_cb_max = QLabel("Colorbar max")
-        self.le_cb_max = QLineEdit("")
-
         for w in [self.path_define, self.le_prova,
                   self.l1, self.le_pixel_dimension,
                   self.lsi, self.lesi,
@@ -165,8 +160,6 @@ class First(QDialog):
                   self.l_b1, self.le_b1,
                   self.ml1, self.ml2,
                   self.rdbUno, self.pb,
-                  self.l_cb_min, self.le_cb_min,
-                  self.l_cb_max, self.le_cb_max,
                   self.display]:
             self.leftLayout.addWidget(w)
 
@@ -201,7 +194,22 @@ class First(QDialog):
         button_layout.addWidget(self.prev_button)
         button_layout.addWidget(self.next_button)
         self.button_widget = QWidget()
-        self.button_widget.setLayout(button_layout)
+
+        self.l_cb_min = QLabel("Colorbar min")
+        self.le_cb_min = QLineEdit("")
+        self.l_cb_max = QLabel("Colorbar max")
+        self.le_cb_max = QLineEdit("")
+
+        right_layout = QVBoxLayout()
+        right_layout.addWidget(self.canvas)
+        right_layout.addLayout(button_layout)
+        right_layout.addWidget(self.l_cb_min)
+        right_layout.addWidget(self.le_cb_min)
+        right_layout.addWidget(self.l_cb_max)
+        right_layout.addWidget(self.le_cb_max)
+
+        self.button_widget = QWidget()
+        self.button_widget.setLayout(right_layout)
 
         plotTitle = QLabel("DIC results")
         plotTitle.setAlignment(Qt.AlignCenter)
@@ -255,7 +263,7 @@ class First(QDialog):
         self.le_cb_max.editingFinished.connect(self.apply_colorbar_limits)
 
     def openImage(self):
-        fname = QFileDialog.getOpenFileName(self, "Open image", ".", "Images (*.png *.jpg *.bmp *.tif)")
+        fname = QFileDialog.getOpenFileName(self, "Open image", ".", "Images (*.png *.jpg *.bmp *.tif *.tiff)")
         if not fname[0]:
             return
         global absolute_path_of_images
