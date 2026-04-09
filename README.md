@@ -46,7 +46,11 @@ If you use the datasets in your research, please cite:
 
 - *Sjölander, A., Belloni, V., Peterson, V. and Ledin, J.* (2023): **Dataset to assess the structural performance of cracked reinforced concrete using FEM, DIC and CMfM**, Mendeley Data, V2, doi: 10.17632/z3yc9z84tk.2, https://data.mendeley.com/datasets/z3yc9z84tk/3
 <p>
-  
+
+The LabTest folder contains images from an experimental test on the GFRP samples used in the following paper:
+
+- *Belloni, V., Ravanelli, R., Nascetti, A., Di Rita, M., Mattei, D., and Crespi, M.* (2019): **py2dic: A new free and open source software for displacement and strain measurements in the field of experimental mechanics**. Sensors, 19(18):3832, https://doi.org/10.3390/s19183832
+
 ## :pushpin: References
 
 <p align="justify"> 
