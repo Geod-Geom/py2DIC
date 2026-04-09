@@ -287,8 +287,11 @@ class First(QDialog):
             levels = int(self.lestopi.text())
             image_time_sampling = int(self.lesamp.text())
             templateWidth = int(self.le_tem_width.text())
+            self.templateWidth = templateWidth
             b = int(self.le_b.text())
             d = int(self.le_b1.text())
+            self.b = b  
+            self.d = d
             ml = int(self.ml2.text())
             H = 2 * d + templateWidth
             V = 2 * b + templateWidth
@@ -353,8 +356,11 @@ class First(QDialog):
         if kind in ('dx', 'dy'):
             img = plot_data[1]
             disp = plot_data[2]
+            temp_dim = self.templateWidth
+            b = self.b
+            d = self.d
             ax = self.figure.add_subplot(111)
-            ax.imshow(img, cmap='gray', origin='upper')
+            ax.imshow(img[int((temp_dim-1)/2+b)::, int((temp_dim-1)/2+d)::], cmap='gray', origin='upper')
             im_disp = ax.imshow(disp, cmap=cm.jet, alpha=0.5, vmin=vmin, vmax=vmax)
             ax.set_title(f"{'Horizontal' if kind=='dx' else 'Vertical'} displacement")
             ax.axis('off')
