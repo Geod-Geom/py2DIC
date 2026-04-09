@@ -1,9 +1,9 @@
-# Py2DIC 
+# Py2DIC: a Python 2D Digital Image Correlation software 
 
-📢 **News**
- - 08/04/2026 We implemented a new Graphical User Interface (GUI), and we updated the manual. 
+## 📢 Updates
+ - 08/04/2026: we implemented a new Graphical User Interface, and we updated the manual. 
 
-**Introduction**
+## :green_book: Introduction
 
 <p align="justify"> 
 <strong>Py2DIC</strong> is a free and open-source Python software for <strong>2D Digital Image Correlation (DIC)</strong> developed at the Geodesy and Geomatics Division of Sapienza University of Rome.
@@ -11,11 +11,11 @@
 
 <p align="justify"> 
 The software compares a series of images of a planar surface collected at different stages of deformation by tracking the pixel movement inside the Area of Interest (AOI) using matching algorithms (template matching method). 
-At the end of the processing, py2DIC returns the <strong>displacement</strong> and <strong>strain fields</strong> (Green Lagrangian strains) inside the AOI. For strain computation, the software applies smoothing techniques (Gaussian or Spline) to the displacement field to reduce the noise.
+At the end of the processing, Py2DIC returns the <strong>displacement</strong> and <strong>strain fields</strong> (Green Lagrangian strains) inside the AOI. For strain computation, the software applies smoothing techniques (Gaussian or Spline) to the displacement field to reduce the noise.
 </p>
 
 <p align="justify">   
-The software allows users to set the main input parameters for displacement and strain computation, such as template and search window dimensions (see Figure).
+The software allows users to set the main input parameters for displacement and strain computation, such as template and search window dimensions.
 </p>
 
 <p align="center">
@@ -24,7 +24,9 @@ The software allows users to set the main input parameters for displacement and 
 
 ## :wrench: Installation and usage 
 
-To install and test the software, please follow the instructions in the manual https://github.com/Geod-Geom/py2DIC/blob/master/Py2DIC_manual.pdf. 
+To install and test the software, please follow the instructions in the manual 
+
+https://github.com/Geod-Geom/py2DIC/blob/master/Py2DIC_manual.pdf. 
 
 ## :camera: Datasets
 
