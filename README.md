@@ -10,17 +10,26 @@
 </p>
 
 <p align="justify"> 
-The software compares a series of images of a planar surface collected at different stages of deformation by tracking the pixel movement inside the Area of Interest (AOI) using matching algorithms (template matching method). 
+The software compares a series of images of a planar surface collected at different stages of deformation by tracking the pixel movement inside the Area of Interest (AOI) using template matching methods (Figure 1). 
 At the end of the processing, Py2DIC returns the <strong>displacement</strong> and <strong>strain fields</strong> (Green Lagrangian strains) inside the AOI. For strain computation, the software applies smoothing techniques (Gaussian or Spline) to the displacement field to reduce the noise.
 </p>
 
+<p align="center">
+  <img width="460" height="300" src="img_README/template_matching2.png"><br>
+  <em>Figure 1: Template matching.</em>
+</p>
+
 <p align="justify">   
-The software allows users to set the main input parameters for displacement and strain computation, such as template and search window dimensions.
+The software allows users to load the reference image, set input parameters for displacement and strain computation (e.g., template and search window dimensions) and visualise the results (Figure 2).
+ 
 </p>
 
 <p align="center">
-  <img width="460" height="300" src="https://github.com/Geod-Geom/py2DIC/blob/master/template_matching2.png">
-</p> 
+  <img width="950" src="img_README/GUI.png"><br>
+  <em>Figure 2: Py2DIC GUI.</em>
+</p>
+
+
 
 ## :wrench: Installation and usage 
 
