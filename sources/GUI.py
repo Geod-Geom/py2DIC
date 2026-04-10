@@ -1,28 +1,3 @@
-# -*- coding: utf-8 -*-
-'''
- py2DIC
- 2D Digital Image Correlation software
- developed by Geodesy and Geomatics Division   
- Sapienza University of Rome
- 
- The information in this file is
- Copyright(c) 2017, 
- Andrea Nascetti    <andrea.nascetti@uniroma1.it>,  
- Valeria Belloni    <valeria.belloni@uniroma1.it>,
- Roberta Ravanelli  <roberta.ravanelli@uniroma1.it>,
- Martina Di Rita    <martina.dirita@uniroma1.it> 
- and is subject to the terms and conditions of the
- GNU Lesser General Public License Version 2.1
- The license text is available from
- http://www.gnu.org/licenses/lgpl.html
- 
- More information in the following scientific papers:
- Ravanelli R., Nascetti A., Di Rita M., Belloni V., Mattei D., Nisticò N., and Crespi M.: A new Digital Image Correlation software for displacements field measurement in structural applications, The International Archives of the Photogrammetry, Remote Sensing and Spatial Information Sciences, XLII-4/W2, 139-145,
- https://doi.org/10.5194/isprs-archives-XLII-4-W2-139-2017, 2017.
- Belloni V., Ravanelli, R., Nascetti, A., Di Rita, M., Mattei, D., and Crespi, M.: DIGITAL IMAGE CORRELATION FROM COMMERCIAL TO FOS SOFTWARE: A MATURE TECHNIQUE FOR FULL-FIELD DISPLACEMENT MEASUREMENTS,The International Archives of the Photogrammetry, Remote Sensing and Spatial Information Sciences, XLII-2, 91-95, 
- https://doi.org/10.5194/isprs-archives-XLII-2-91-2018, 2018. 
-Belloni V., Ravanelli, R., Nascetti, A., Di Rita, M., Mattei, D., and Crespi, M.: py2DIC: A New Free and Open Source Software for Displacement and Strain Measurements in the Field of Experimental Mechanics, Sensors 2019, 19, 3832. https://doi.org/10.3390/s19183832, 2019
-'''
 
 import sys
 import os
@@ -38,12 +13,10 @@ import cv2
 
 path = os.path.dirname(os.path.abspath(__file__)) + '/'
 
-# Create output directory
 results_directory = 'OutputPlots'
 if not os.path.exists(path + '/' + results_directory):
     os.makedirs(path + '/' + results_directory)
 
-# Global AOI coords
 rectangley1 = None
 rectangley2 = None
 rectanglex1 = None
@@ -58,7 +31,8 @@ class ImageDrawPanel(QGraphicsPixmapItem):
         self.radius = 5
         self.pen = QPen(Qt.red)
         self.pen.setWidth(2)
-        self.brush = QBrush(Qt.yellow)
+        color = QColor(255, 255, 150, 80)  
+        self.brush = QBrush(color)
         self.width_scale_ratio = width_scale_ratio
         self.height_scale_ratio = height_scale_ratio
         self.rect = np.zeros((2, 2), dtype=int)
@@ -84,16 +58,19 @@ class ImageDrawPanel(QGraphicsPixmapItem):
                 self.rect[1, 0] - self.rect[0, 0],
                 self.rect[1, 1] - self.rect[0, 1]
             )
-            rectangley1 = int(self.rect[0, 1] / self.height_scale_ratio)
-            rectangley2 = int(self.rect[1, 1] / self.height_scale_ratio)
-            rectanglex1 = int(self.rect[0, 0] / self.width_scale_ratio)
-            rectanglex2 = int(self.rect[1, 0] / self.width_scale_ratio)
+            rectangley1 = int(self.rect[0, 1] * self.height_scale_ratio)
+            rectangley2 = int(self.rect[1, 1] * self.height_scale_ratio)
+            rectanglex1 = int(self.rect[0, 0] * self.width_scale_ratio)
+            rectanglex2 = int(self.rect[1, 0] * self.width_scale_ratio)
             print("AOI:", rectanglex1, rectangley1, rectanglex2, rectangley2)
             self.cont = 0
 
     def mousePressEvent(self, event):
-        self.x = int(event.pos().x())
-        self.y = int(event.pos().y())
+        scene_pos = self.mapToScene(event.pos())
+        item_pos = self.mapFromScene(scene_pos)
+
+        self.x = int(item_pos.x())
+        self.y = int(item_pos.y())
         self.update()
 
 class First(QDialog):
@@ -101,6 +78,19 @@ class First(QDialog):
         super().__init__(parent)
 
         self.setWindowTitle("Py2DIC")
+        self.setStyleSheet("""
+        QLabel {
+            font-size: 15px;
+        }
+
+        QCheckBox {
+            font-size: 15px;
+        }
+
+        QPushButton {
+            font-size: 15px;
+        }
+        """)
         self.setWindowFlags(Qt.Window | Qt.WindowMinimizeButtonHint |
                             Qt.WindowMaximizeButtonHint | Qt.WindowCloseButtonHint)
         self.setGeometry(100, 50, 1600, 900)
@@ -117,13 +107,11 @@ class First(QDialog):
         leftTitle = QLabel("Input parameters")
         leftTitle.setAlignment(Qt.AlignCenter)
         leftTitle.setStyleSheet("font-weight: bold; font-size: 16px;")
+
         # ===== LOGO =====
-
         self.logo_label = QLabel()
-
         pixmap_logo = QPixmap(path+'../logo_sapienza.jpg')
         pixmap_logo = pixmap_logo.scaled(300, 200, Qt.KeepAspectRatio, Qt.SmoothTransformation)
-
         self.logo_label.setPixmap(pixmap_logo)
         self.logo_label.setAlignment(Qt.AlignCenter)
 
@@ -148,6 +136,21 @@ class First(QDialog):
         self.rdbUno = QCheckBox("Compute strain field")
         self.rdbUno.setChecked(True)
         self.pb = QPushButton("Run")
+        self.pb.setStyleSheet("""
+        QPushButton {
+            background-color: #2f6fbb;
+            color: white;
+            font-weight: bold;
+            border-radius: 6px;
+            padding: 6px;
+        }
+        QPushButton:hover {
+            background-color: #295fa0;
+        }
+        QPushButton:pressed {
+            background-color: #1f4a7a;
+        }
+        """)
         self.display = QTextBrowser()
 
         for w in [self.path_define, self.le_prova,
@@ -321,7 +324,7 @@ class First(QDialog):
         elif event.key() == Qt.Key_Left:
             self.prev_plot()
 
-    # ===== Plotting =====
+    # ===== PLOTTING =====
     def plot_DIC_results_in_GUI(self, crop_img1, dispx_smoothed, dispy_smoothed,
                                 strain_xx2=None, strain_yy2=None, strain_xy2=None,
                                 X=None, Y=None, disp_U=None, disp_V=None, mod=None, dim_pixel=1):

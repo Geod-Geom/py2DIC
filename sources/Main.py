@@ -1,28 +1,3 @@
-# -*- coding: utf-8 -*-
-'''
- py2DIC
- 2D Digital Image Correlation software
- developed by Geodesy and Geomatics Division   
- Sapienza University of Rome
- 
- The information in this file is
- Copyright(c) 2017, 
- Andrea Nascetti    <andrea.nascetti@uniroma1.it>,  
- Valeria Belloni    <valeria.belloni@uniroma1.it>,
- Roberta Ravanelli  <roberta.ravanelli@uniroma1.it>,
- Martina Di Rita    <martina.dirita@uniroma1.it> 
- and is subject to the terms and conditions of the
- GNU Lesser General Public License Version 2.1
- The license text is available from
- http://www.gnu.org/licenses/lgpl.html
- 
- More information in the following scientific papers:
- Ravanelli R., Nascetti A., Di Rita M., Belloni V., Mattei D., Nisticò N., and Crespi M.: A new Digital Image Correlation software for displacements field measurement in structural applications, The International Archives of the Photogrammetry, Remote Sensing and Spatial Information Sciences, XLII-4/W2, 139-145,
- https://doi.org/10.5194/isprs-archives-XLII-4-W2-139-2017, 2017.
- Belloni V., Ravanelli, R., Nascetti, A., Di Rita, M., Mattei, D., and Crespi, M.: DIGITAL IMAGE CORRELATION FROM COMMERCIAL TO FOS SOFTWARE: A MATURE TECHNIQUE FOR FULL-FIELD DISPLACEMENT MEASUREMENTS,The International Archives of the Photogrammetry, Remote Sensing and Spatial Information Sciences, XLII-2, 91-95, 
- https://doi.org/10.5194/isprs-archives-XLII-2-91-2018, 2018. 
-Belloni V., Ravanelli, R., Nascetti, A., Di Rita, M., Mattei, D., and Crespi, M.: py2DIC: A New Free and Open Source Software for Displacement and Strain Measurements in the Field of Experimental Mechanics, Sensors 2019, 19, 3832. https://doi.org/10.3390/s19183832, 2019
-'''
 
 import cv2
 import numpy as np
@@ -202,7 +177,7 @@ def gaussian_smooting_with_Nan(img, sigma=7, k_size=15):
     mask = idx_NaN != indx_NaN_filtered
 
     img_smoothed[mask] = img_smoothed_2[mask]
-    img_smoothed[idx_NaN] = np.NaN
+    img_smoothed[idx_NaN] = np.nan
     img_smoothed = sg.medfilt2d(img_smoothed, 5)
 
     return img_smoothed
@@ -371,7 +346,6 @@ def DIC(images_absolute_path, dim_pixel, start_index, levels, image_time_samplin
         Dim_y = recty2-recty1 
         Dim_x = rectx2-rectx1
 
-
     h = int(Dim_y/(temp_dim+2*b+c)-1)# qui c'era -1
     w = int(Dim_x/(temp_dim+2*d+c)-1)#
     grid_points = H*V * w * h
@@ -392,12 +366,7 @@ def DIC(images_absolute_path, dim_pixel, start_index, levels, image_time_samplin
             crop_img2 = img2[recty1:recty2, rectx1:rectx2]
                        
             # If statement to define width and height in ubuntu
-            if windows == True:
-                img1 = cv2.imread(img_names[start_index], 0)
-                crop_img1 = img1[recty1:recty2, rectx1:rectx2]
-                img2 = cv2.imread(img_names[stop_index], 0)
-                crop_img2 = img2[recty1:recty2, rectx1:rectx2]
-            else:
+            if windows == False:
                 cv2.flip(crop_img1, 0, crop_img1)
                 cv2.flip(crop_img2, 0, crop_img2)
 
@@ -408,13 +377,12 @@ def DIC(images_absolute_path, dim_pixel, start_index, levels, image_time_samplin
             print ("Camera resolution")
             print (Dim_x, "x", Dim_y, "px")
             print ('-----------')
-
+            img1r = crop_img1.copy()
+            img2r = crop_img2.copy()
             msg = msg + '\n-----------\n'
             msg = msg + "Camera resolution\n"
             msg = msg + str(Dim_x)+"x"+ str(Dim_y)
             msg = msg + '\n-----------\n'
-            img1r = crop_img1.copy()
-            img2r = crop_img2.copy()
             
             assert np.allclose(img1r.shape, img2r.shape)
             assert np.allclose(img1r.shape[0], Dim_y)
@@ -437,6 +405,9 @@ def DIC(images_absolute_path, dim_pixel, start_index, levels, image_time_samplin
 
                 mask_read = cv2.imread(os.path.split(images_absolute_path[:-1])[0] + "\\Mask\\mask.png", 0)
                 mask1 = np.array(mask_read, dtype=bool)
+
+                if recty1!= None and recty2!= None and rectx1!= None and rectx2!= None:
+                	mask1 = mask1[recty1:recty2, rectx1:rectx2]
                 mask = mask1[int(b+(temp_dim-1)/2):int(b+(temp_dim-1)/2+h*V), int(d+(temp_dim-1)/2):int(d+(temp_dim-1)/2+ H*w)]
 
                 dx[mask] = float("NaN")
@@ -493,6 +464,7 @@ def DIC(images_absolute_path, dim_pixel, start_index, levels, image_time_samplin
     
     stop = timeit.default_timer()
     print('Time [min]', (stop - start)/60) 
+    msg = msg + ' Processing time ' + f'{(stop - start)/60:.2f}' + ' min'
 
     return msg, results_for_plot
 
