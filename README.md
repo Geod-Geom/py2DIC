@@ -1,5 +1,9 @@
 # Py2DIC: a Python 2D Digital Image Correlation software 
 
+<p align="center">
+  <img width="450" height="300" src="img_README/Logo2.png"><br>
+</p>
+
 ## 📢 Updates
  - 08/04/2026: we implemented a new Graphical User Interface, and we updated the manual. 
 
