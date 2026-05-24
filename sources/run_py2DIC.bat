@@ -6,7 +6,7 @@ rem - conda to be in the PATH
 rem - cmd.exe to be initialized with conda init
 
 rem Define here the path to your conda installation
-set CONDAPATH="C:\Users\Utente\anaconda3\"
+set "CONDAPATH=C:\Users\Utente\anaconda3\"
 rem Define here the name of the environment
 set ENVNAME=py2DIC
 
