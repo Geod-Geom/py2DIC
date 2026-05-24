@@ -6,11 +6,11 @@
  Sapienza University of Rome
  
  The information in this file is
- Copyright(c) 2017, 
- Andrea Nascetti    <andrea.nascetti@uniroma1.it>,  
- Valeria Belloni    <valeria.belloni@uniroma1.it>,
- Roberta Ravanelli  <roberta.ravanelli@uniroma1.it>,
- Martina Di Rita    <martina.dirita@uniroma1.it> 
+ Copyright(c) 2017,      
+ Valeria Belloni,    
+ Roberta Ravanelli,
+ Martina Di Rita,
+ Andrea Nascetti
  and is subject to the terms and conditions of the
  GNU Lesser General Public License Version 2.1
  The license text is available from
@@ -269,14 +269,9 @@ class matching_class:
                     m = int(self.step_y * (k/ (self.w * self.H) - j * self.V))
                     n = int(self.step_x * (k % self.H))
                     i = int((k % (self.w * self.H))/ self.H)
-                    # i, j sono coordinate griglia
 
-                    #print (str(k))#, str(self.H*self.V*self.w*self.h)#, m, n, self.w, self.h, self.H, self.V
-                    # occhio ai delta: se d e b non sono moltiplicati per 2, allora avra una sovrapposizione
-                    # parziale delle search area (i template comunque non si sovrappongono mai, e restano sempre centrati sulla corrispondente search area)
-                    # se non voglio che le search area si sovrappongano, devo moltiplicare b e d per due (anche nel ciclo for)
-                    Delta_X = i*(self.c+2*self.d+self.temp_dim)# i*(c+d+temp_dim) aggiungendo il *2, le search area non si accavallano piu'
-                    Delta_Y = j*(self.c+2*self.b+self.temp_dim)# j*(c+b+temp_dim)
+                    Delta_X = i*(self.c+2*self.d+self.temp_dim)
+                    Delta_Y = j*(self.c+2*self.b+self.temp_dim)
                     TP_temp_x = Delta_X + self.c + self.d + self.temp_dim/2.0 + n # x start (pixel)
                     TP_temp_y = Delta_Y + self.c + self.b + self.temp_dim/2.0 + m # y start (pixel)
 
@@ -308,8 +303,6 @@ class matching_class:
                     assert np.allclose(TP_temp_x, (start_x_search_slice+ stop_x_search_slice)/2.0)
                     assert np.allclose(TP_temp_y, (start_y_search_slice+ stop_y_search_slice)/2.0)
 
-                    # in teoria dovrei fare un controllo anche sugli start e stop del template e del search, ma tanto stanno cmq piu a sinstra e piu' sopra dello stop del template
-                    # if (stop_y_search_slice>=Dim_y) or (stop_x_search_slice>=Dim_x):
                     if (self.c + Delta_Y + 2*self.b +self.temp_dim + m >=self.Dim_y) or (self.c + Delta_X + 2*self.d + self.temp_dim + n >=self.Dim_x):
                         return np.array(['NaN','NaN','NaN','NaN','NaN','NaN'])
                         
@@ -360,9 +353,6 @@ def DIC(images_absolute_path, dim_pixel, start_index, levels, image_time_samplin
         Dim_y = np.shape(crop_img1)[1]
 
     ########### TEMPLATE PARAMETERS ################
-    #H = 2*d + temp_dim # numero di griglie che si ripetono sulla singola riga della griglia grande
-    #V = 2*b + temp_dim # numero di griglie che si ripetono sulla singola colonna della griglia grande
-    ltot = H*V
     step_x = 1
     step_y = 1
     

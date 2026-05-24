@@ -6,11 +6,11 @@
  Sapienza University of Rome
  
  The information in this file is
- Copyright(c) 2017, 
- Andrea Nascetti    <andrea.nascetti@uniroma1.it>,  
- Valeria Belloni    <valeria.belloni@uniroma1.it>,
- Roberta Ravanelli  <roberta.ravanelli@uniroma1.it>,
- Martina Di Rita    <martina.dirita@uniroma1.it> 
+ Copyright(c) 2017,      
+ Valeria Belloni,    
+ Roberta Ravanelli,
+ Martina Di Rita,
+ Andrea Nascetti
  and is subject to the terms and conditions of the
  GNU Lesser General Public License Version 2.1
  The license text is available from
